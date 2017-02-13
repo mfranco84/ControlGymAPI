@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
+using Newtonsoft.Json.Linq;
 
 namespace ControlGymAPI.Controllers
 {
@@ -22,6 +23,16 @@ namespace ControlGymAPI.Controllers
             return listaMiembros;
         }
 
+        public MiembroModel Post(JObject jsonData)
+        {
+            dynamic json = jsonData;
+            return new MiembroModel
+            {
+                IdMiembro = 3000,
+                Correo = json.Correo,
+                Nombre = json.Nombre
+            };
+        }
 
     }
 }

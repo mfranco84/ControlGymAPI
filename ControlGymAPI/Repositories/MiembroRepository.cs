@@ -62,5 +62,53 @@ namespace ControlGymAPI.Repositories
             }
             return listResult;
         }
+
+        public Boolean InsertMiembro(MiembroModel miembro)
+        {
+            var resultado = false;
+            var myConnection = new ConnectionManager(connectionString);
+            var conexion = myConnection.CreateConnection();
+            var command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Miembro_Insertar";
+                command.CommandType = CommandType.StoredProcedure;
+
+                var parameter = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = miembro.IdGimnasio };
+                command.Parameters.Add(parameter);
+
+                var parameter2 = new SqlParameter("@Correo", SqlDbType.Int) { Value = miembro.Correo };
+                command.Parameters.Add(parameter2);
+
+                var parameter3 = new SqlParameter("@Clave", SqlDbType.Int) { Value = miembro.Clave };
+                command.Parameters.Add(parameter3);
+
+                var parameter4 = new SqlParameter("@Nombre", SqlDbType.Int) { Value = miembro.Nombre };
+                command.Parameters.Add(parameter4);
+
+                var parameter5 = new SqlParameter("@Telefono", SqlDbType.Int) { Value = miembro.Telefono };
+                command.Parameters.Add(parameter5);
+
+                var parameter6 = new SqlParameter("@CedulaIdentidad", SqlDbType.Int) { Value = miembro.CedulaIdentidad };
+                command.Parameters.Add(parameter6);
+
+                var parameter7 = new SqlParameter("@Direccion", SqlDbType.Int) { Value = miembro.Direccion };
+                command.Parameters.Add(parameter7);
+
+                conexion.Open();
+                command.ExecuteNonQuery();
+
+                resultado = true;
+            }
+            catch (Exception exception)
+            {
+                //Log4Net.WriteLog(exception, Log4Net.LogType.Error);
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return resultado;
+        }
     }
 }
