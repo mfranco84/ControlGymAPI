@@ -1,0 +1,54 @@
+{
+	"id": "4aeda696-767c-92d4-b8fb-308c602630db",
+	"name": "GymControl",
+	"description": "",
+	"order": [
+		"dea685ce-a161-f34e-d78b-17f9f4ba52a5",
+		"4867976a-3152-2ea8-1929-7e0920f3ff57"
+	],
+	"folders": [],
+	"timestamp": 1486942788316,
+	"owner": "24438",
+	"public": false,
+	"requests": [
+		{
+			"id": "4867976a-3152-2ea8-1929-7e0920f3ff57",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:50639/api/miembro",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1486943819175,
+			"name": "Crear miembro",
+			"description": "",
+			"collectionId": "4aeda696-767c-92d4-b8fb-308c602630db",
+			"responses": [],
+			"rawModeData": "{\n  \"IdGimnasio\": 2,\n  \"Correo\": \"johndoe@testmail.com\",\n  \"Nombre\": \"John Doe\",\n  \"Telefono\": \"44676563\",\n  \"CedulaIdentidad\": \"1122334455\",\n  \"Direccion\": \"Direccion fake\"\n}"
+		},
+		{
+			"id": "dea685ce-a161-f34e-d78b-17f9f4ba52a5",
+			"headers": "",
+			"url": "http://localhost:50639/api/miembro",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "4aeda696-767c-92d4-b8fb-308c602630db",
+			"data": null,
+			"dataMode": "params",
+			"name": "Get miembros",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1486942861104,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}
