@@ -30,26 +30,28 @@ namespace ControlGymAPI.Repositories
                 command.CommandType = CommandType.StoredProcedure;
 
                 conexion.Open();
-                SqlDataReader productReader = command.ExecuteReader();
+                SqlDataReader SqlReader = command.ExecuteReader();
 
-                while (productReader.Read())
+                while (SqlReader.Read())
                 {
-                    var product = new MiembroModel
+                    var miembro = new MiembroModel();
+
+                    miembro.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
+                    miembro.UsuInclusion = SqlReader["UsuInclusion"].ToString();
+                    miembro.FechaInclusion = SqlReader.GetFieldValue<DateTime>(SqlReader.GetOrdinal("FechaInclusion"));
+                    miembro.UsuModificacion = SqlReader["UsuModificacion"].ToString();
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
                     {
-                        IdMiembro = Convert.ToInt16(productReader["IdMiembro"]),
-                        //UsuInclusion = productReader["UsuInclusion"].ToString(),
-                        //FechaInclusion = DateTime.Parse(productReader["FechaInclusion"].ToString()),
-                        //UsuModificacion = productReader["UsuModificacion"].ToString(),
-                        //FechaModificacion = DateTime.Parse(productReader["FechaModificacion"].ToString()),
-                        Estado = Convert.ToInt16(productReader["Estado"]),
-                        IdGimnasio = Convert.ToInt16(productReader["IdGimnasio"]),
-                        Correo = productReader["Correo"].ToString(),
-                        Nombre = productReader["Nombre"].ToString(),
-                        Telefono = productReader["Telefono"].ToString(),
-                        CedulaIdentidad = productReader["CedulaIdentidad"].ToString(),
-                        Direccion = productReader["Direccion"].ToString(),
-                    };
-                    listResult.Add(product);
+                        miembro.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    miembro.Estado = Convert.ToInt16(SqlReader["Estado"]);
+                    miembro.IdGimnasio = Convert.ToInt16(SqlReader["IdGimnasio"]);
+                    miembro.Correo = SqlReader["Correo"].ToString();
+                    miembro.Nombre = SqlReader["Nombre"].ToString();
+                    miembro.Telefono = SqlReader["Telefono"].ToString();
+                    miembro.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
+                    miembro.Direccion = SqlReader["Direccion"].ToString();
+                    listResult.Add(miembro);
                 }
             }
             catch (Exception exception)
@@ -63,9 +65,9 @@ namespace ControlGymAPI.Repositories
             return listResult;
         }
 
-        public Boolean InsertMiembro(MiembroModel miembro)
+        public MiembroModel InsertMiembro(MiembroModel miembro)
         {
-            var resultado = false;
+            MiembroModel resultado = new MiembroModel();
             var myConnection = new ConnectionManager(connectionString);
             var conexion = myConnection.CreateConnection();
             var command = myConnection.CreateCommand(conexion);
@@ -77,28 +79,48 @@ namespace ControlGymAPI.Repositories
                 var parameter = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = miembro.IdGimnasio };
                 command.Parameters.Add(parameter);
 
-                var parameter2 = new SqlParameter("@Correo", SqlDbType.Int) { Value = miembro.Correo };
+                var parameter2 = new SqlParameter("@Correo", SqlDbType.VarChar) { Value = miembro.Correo };
                 command.Parameters.Add(parameter2);
 
-                var parameter3 = new SqlParameter("@Clave", SqlDbType.Int) { Value = miembro.Clave };
+                var parameter3 = new SqlParameter("@Clave", SqlDbType.VarChar) { Value = "clave" }; //Definir clave dinamicamente
                 command.Parameters.Add(parameter3);
 
-                var parameter4 = new SqlParameter("@Nombre", SqlDbType.Int) { Value = miembro.Nombre };
+                var parameter4 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = miembro.Nombre };
                 command.Parameters.Add(parameter4);
 
-                var parameter5 = new SqlParameter("@Telefono", SqlDbType.Int) { Value = miembro.Telefono };
+                var parameter5 = new SqlParameter("@Telefono", SqlDbType.VarChar) { Value = miembro.Telefono };
                 command.Parameters.Add(parameter5);
 
-                var parameter6 = new SqlParameter("@CedulaIdentidad", SqlDbType.Int) { Value = miembro.CedulaIdentidad };
+                var parameter6 = new SqlParameter("@CedulaIdentidad", SqlDbType.VarChar) { Value = miembro.CedulaIdentidad };
                 command.Parameters.Add(parameter6);
 
-                var parameter7 = new SqlParameter("@Direccion", SqlDbType.Int) { Value = miembro.Direccion };
+                var parameter7 = new SqlParameter("@Direccion", SqlDbType.VarChar) { Value = miembro.Direccion };
                 command.Parameters.Add(parameter7);
 
                 conexion.Open();
-                command.ExecuteNonQuery();
+                //command.ExecuteNonQuery();
+                SqlDataReader SqlReader = command.ExecuteReader();
 
-                resultado = true;
+                while (SqlReader.Read())
+                {
+                    resultado = new MiembroModel();
+
+                    resultado.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
+                    resultado.UsuInclusion = SqlReader["UsuInclusion"].ToString();
+                    resultado.FechaInclusion = SqlReader.GetFieldValue<DateTime>(SqlReader.GetOrdinal("FechaInclusion"));
+                    resultado.UsuModificacion = SqlReader["UsuModificacion"].ToString();
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        resultado.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    resultado.Estado = Convert.ToInt16(SqlReader["Estado"]);
+                    resultado.IdGimnasio = Convert.ToInt16(SqlReader["IdGimnasio"]);
+                    resultado.Correo = SqlReader["Correo"].ToString();
+                    resultado.Nombre = SqlReader["Nombre"].ToString();
+                    resultado.Telefono = SqlReader["Telefono"].ToString();
+                    resultado.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
+                    resultado.Direccion = SqlReader["Direccion"].ToString();
+                }
             }
             catch (Exception exception)
             {

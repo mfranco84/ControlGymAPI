@@ -12,26 +12,32 @@ namespace ControlGymAPI.Controllers
 {
     public class MiembroController : ApiController
     {
+        // Atributos
+        List<MiembroModel> listaMiembros;
+        MiembroRepository miembroRep = new MiembroRepository();
         /**
          * GET: api/Miembro/
         **/
         public List<MiembroModel> Get()
         {
-            List<MiembroModel> listaMiembros; 
-            var miembroRep = new MiembroRepository();
             listaMiembros = miembroRep.RetrieveMiembros();
             return listaMiembros;
         }
 
         public MiembroModel Post(JObject jsonData)
         {
+            // una variable de tipo dynamic nos permite acceder 
+            // las propiedades de la variable como si fuese un Objeto
             dynamic json = jsonData;
-            return new MiembroModel
-            {
-                IdMiembro = 3000,
-                Correo = json.Correo,
-                Nombre = json.Nombre
-            };
+            MiembroModel miembro = new MiembroModel();
+            miembro.IdGimnasio = json.IdGimnasio;
+            miembro.Correo = json.Correo;
+            miembro.Nombre = json.Nombre;
+            miembro.Telefono = json.Telefono;
+            miembro.CedulaIdentidad = json.CedulaIdentidad;
+            miembro.Direccion = json.Direccion;
+
+            return miembroRep.InsertMiembro(miembro);
         }
 
     }
