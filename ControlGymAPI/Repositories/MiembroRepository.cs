@@ -14,11 +14,18 @@ namespace ControlGymAPI.Repositories
     public class MiembroRepository
     {
         string connectionString = WebConfigurationManager.AppSettings["ConnectionString"];
+        int miembroId = 0 ;
+
+        public List<MiembroModel> RetrieveMiembro(int id)
+        {
+            miembroId = id;
+            return RetrieveMiembros();
+        }
         /**
          * RetrieveMiembros: Regresa la lista de miembros
          * TODO: Modificar para  regresar solamente miembros pertenecientes a un gimnasio.
         **/
-        public List<MiembroModel> RetrieveMiembros()
+        public List<MiembroModel> RetrieveMiembros( )
         {
             var listResult = new List<MiembroModel>();
             var myConnection = new ConnectionManager(connectionString);
@@ -28,6 +35,12 @@ namespace ControlGymAPI.Repositories
             {
                 command.CommandText = "usp_Miembro_Seleccionar";
                 command.CommandType = CommandType.StoredProcedure;
+                if (miembroId != 0)
+                {
+                    var parameter = new SqlParameter("@IdMiembro", SqlDbType.Int) { Value = miembroId };
+                    command.Parameters.Add(parameter);
+                    miembroId = 0;
+                }
 
                 conexion.Open();
                 SqlDataReader SqlReader = command.ExecuteReader();

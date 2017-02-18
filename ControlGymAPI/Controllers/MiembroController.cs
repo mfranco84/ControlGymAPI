@@ -15,13 +15,22 @@ namespace ControlGymAPI.Controllers
         // Atributos
         List<MiembroModel> listaMiembros;
         MiembroRepository miembroRep = new MiembroRepository();
+        
         /**
          * GET: api/Miembro/
         **/
-        public List<MiembroModel> Get()
+        public List<MiembroModel> GetMiembros()
         {
             listaMiembros = miembroRep.RetrieveMiembros();
             return listaMiembros;
+        }
+        /**
+         * GET: api/Miembro/{id}
+        **/
+        public MiembroModel GetMiembroById(int id)
+        {
+            listaMiembros = miembroRep.RetrieveMiembro(id);
+            return listaMiembros.First();
         }
 
         public MiembroModel Post(JObject jsonData)
