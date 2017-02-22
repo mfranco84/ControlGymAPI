@@ -161,6 +161,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\GimnasioController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginAdministradorController.cs" />
     <Compile Include="Controllers\LoginMiembroController.cs" />
@@ -169,8 +170,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AdministradorModel.cs" />
+    <Compile Include="Models\GimnasioModel.cs" />
     <Compile Include="Models\MiembroModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\GimnasioRepository.cs" />
     <Compile Include="Repositories\LoginAdministradorRepository.cs" />
     <Compile Include="Repositories\LoginMiembroRepository.cs" />
     <Compile Include="Repositories\MiembroRepository.cs" />
