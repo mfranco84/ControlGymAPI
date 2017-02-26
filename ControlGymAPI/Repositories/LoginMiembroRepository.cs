@@ -18,7 +18,7 @@ namespace ControlGymAPI.Repositories
          * LoginMiembro: Realiza Login de Usuarios         
         **/
         public MiembroModel LoginMiembro(MiembroModel miembro)
-        {            
+        {
             var myConnection = new ConnectionManager(connectionString);
             var conexion = myConnection.CreateConnection();
             var command = myConnection.CreateCommand(conexion);
@@ -37,7 +37,7 @@ namespace ControlGymAPI.Repositories
 
                 SqlDataReader SqlReader = command.ExecuteReader();
                 while (SqlReader.Read())
-                {                    
+                {
                     miembro.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
                     miembro.UsuInclusion = SqlReader["UsuInclusion"].ToString();
                     miembro.FechaInclusion = SqlReader.GetFieldValue<DateTime>(SqlReader.GetOrdinal("FechaInclusion"));
@@ -52,7 +52,7 @@ namespace ControlGymAPI.Repositories
                     miembro.Nombre = SqlReader["Nombre"].ToString();
                     miembro.Telefono = SqlReader["Telefono"].ToString();
                     miembro.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
-                    miembro.Direccion = SqlReader["Direccion"].ToString();                             
+                    miembro.Direccion = SqlReader["Direccion"].ToString();
                 }
                 miembro.Clave = string.Empty;
                 return miembro;

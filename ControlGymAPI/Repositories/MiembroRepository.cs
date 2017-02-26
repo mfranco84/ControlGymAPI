@@ -14,7 +14,7 @@ namespace ControlGymAPI.Repositories
     public class MiembroRepository
     {
         string connectionString = WebConfigurationManager.AppSettings["ConnectionString"];
-        int miembroId = 0 ;
+        int miembroId = 0;
 
         public List<MiembroModel> RetrieveMiembro(int id)
         {
@@ -25,7 +25,7 @@ namespace ControlGymAPI.Repositories
          * RetrieveMiembros: Regresa la lista de miembros
          * TODO: Modificar para  regresar solamente miembros pertenecientes a un gimnasio.
         **/
-        public List<MiembroModel> RetrieveMiembros( )
+        public List<MiembroModel> RetrieveMiembros()
         {
             var listResult = new List<MiembroModel>();
             var myConnection = new ConnectionManager(connectionString);

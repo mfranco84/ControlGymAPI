@@ -18,7 +18,7 @@ namespace ControlGymAPI.Models
         public string Clave;
         public string Nombre;
         public string Telefono;
-        public string CedulaIdentidad;
+        public string CedulaJuridica;
         public string Direccion;
     }
 }

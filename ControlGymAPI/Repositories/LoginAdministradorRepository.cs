@@ -55,8 +55,8 @@ namespace ControlGymAPI.Repositories
                     Administrador.Correo = SqlReader["Correo"].ToString();
                     Administrador.Nombre = SqlReader["Nombre"].ToString();
                     Administrador.Telefono = SqlReader["Telefono"].ToString();
-                    Administrador.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
-                    Administrador.Direccion = SqlReader["Direccion"].ToString();                    
+                    Administrador.CedulaJuridica = SqlReader["CedulaJuridica"].ToString();
+                    Administrador.Direccion = SqlReader["Direccion"].ToString();
                 }
                 Administrador.Clave = string.Empty;
                 return Administrador;

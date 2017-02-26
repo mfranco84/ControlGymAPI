@@ -15,7 +15,7 @@ namespace ControlGymAPI.Controllers
         // Atributos
         List<MiembroModel> listaMiembros;
         MiembroRepository miembroRep = new MiembroRepository();
-        
+
         /**
          * GET: api/Miembro/
         **/
