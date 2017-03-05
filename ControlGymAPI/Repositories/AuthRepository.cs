@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -17,6 +18,7 @@ namespace ControlGymAPI.Repositories
 
         //1- Crear Tabla "auth_token", campos:
         //    IdUsuario int, 
+        //    IdOrganizacion int, 
         //    tipoUsuario enum("miembro" o "administrador"), 
         //    fechaHoraLogin datetime, 
         //    fechaHoraExpiracion datetime,
@@ -31,10 +33,47 @@ namespace ControlGymAPI.Repositories
 
             IEnumerable<string> headerValues;
             var tokenHeader = string.Empty;
+            // Validando la entrada del token como un header 'cgToken'
             if (request.Headers.TryGetValues("cgToken", out headerValues))
             {
                 tokenHeader = headerValues.FirstOrDefault();
-                if (tokenHeader != "123four")
+
+                //TODO: StoreProcedure para obtener el registro del token con base en tokenHeader
+                //parsear datos a la clase AuthModel
+                AuthModel auth = new AuthModel();
+                auth.Token = "123four";
+                if (tokenHeader == auth.Token)
+                {
+                    // Verificar que la fecha y hora actual sean menores que fechaHoraExpiracion
+                    bool diferenciaTiempo = DateTime.Now < auth.FechaHoraExpiracion;
+                    if (diferenciaTiempo)
+                    {
+                        // Actualizar tiempo de expiracion de token segun tipo de usuario
+                        if (auth.TipoUsuario == "Administrador")
+                        {
+                            // Si es administrador, se le aumenta 1 hora desde el momento actual
+                            auth.FechaHoraExpiracion = DateTime.Now.AddMinutes(60);
+                        }
+                        else
+                        {
+                            // Si es miembro, se le aumenta 1 mes desde el momento actual
+                            auth.FechaHoraExpiracion = DateTime.Now.AddMonths(1);
+                        }                        
+                        //TODO: StoreProcedure para actualizar 'FechaHoraExpiracion' del registro del token
+
+                        // Alojar datos de usuario autorizado (miembro/administrador) en una variable global
+                        // para su posterior uso en los diferentes stored procedures
+                        GlobalAuth.IdOrganizacion = auth.IdOrganizacion;
+                        GlobalAuth.IdUsuario = auth.IdUsuario;
+                        GlobalAuth.TipoUsuario = auth.TipoUsuario;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
                 {
                     return false;
                 }
@@ -43,15 +82,6 @@ namespace ControlGymAPI.Repositories
             {
                 return false;
             }
-            // TODO: Implementar logica para validar el token.
-            //1- Verificar existencia del token, de no existir, retornar un false;
-            //2- Verificar que la fecha y hora actual sean menores que fechaHoraExpiracion,
-            //    de no ser menor, retornar false.
-            //3- Sumarle a la fechaHoraExpiracion:
-            //        - para administrador: + 60 minutos
-            //        - para miembro: + 1 mes.
-            //4- Buscar y alojar el  miembro/administrador en una variable global y retornar true
-            return true;
         }
 
 
