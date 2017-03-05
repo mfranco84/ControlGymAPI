@@ -34,7 +34,7 @@ namespace ControlGymAPI.Repositories
             IEnumerable<string> headerValues;
             var tokenHeader = string.Empty;
             // Validando la entrada del token como un header 'cgToken'
-            if (request.Headers.TryGetValues("cgToken", out headerValues))
+            if (request.Headers.TryGetValues("Authorization", out headerValues))
             {
                 tokenHeader = headerValues.FirstOrDefault();
 
