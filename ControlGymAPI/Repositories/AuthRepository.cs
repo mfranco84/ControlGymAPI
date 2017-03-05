@@ -89,7 +89,6 @@ namespace ControlGymAPI.Repositories
         {
             string token = "123four";
             // TODO: Implementar logica para crear un registro para cada login.
-            // 1- Este metodo sera llamado desde las clases LoginAdministradorRepository y LoginMiembroRepository.
             // 2- El valor de la columna fecha_hora_expiracion es:
             //        - para administrador: fecha_hora_login + 60 minutos
             //        - para miembro: fecha_hora_login + 1 mes.
