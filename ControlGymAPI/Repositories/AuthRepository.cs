@@ -87,7 +87,7 @@ namespace ControlGymAPI.Repositories
 
         public string RegistrarToken(int usuarioId, string tipoUsuario)
         {
-            string token = "123four";
+            string token = (usuarioId == 0) ? null : "123four" + tipoUsuario;
             // TODO: Implementar logica para crear un registro para cada login.
             // 2- El valor de la columna fecha_hora_expiracion es:
             //        - para administrador: fecha_hora_login + 60 minutos
