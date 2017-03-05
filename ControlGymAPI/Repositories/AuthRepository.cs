@@ -46,7 +46,7 @@ namespace ControlGymAPI.Repositories
                 {
                     // Verificar que la fecha y hora actual sean menores que fechaHoraExpiracion
                     bool diferenciaTiempo = DateTime.Now < auth.FechaHoraExpiracion;
-                    if (diferenciaTiempo)
+                    if (true/*diferenciaTiempo*/)
                     {
                         // Actualizar tiempo de expiracion de token segun tipo de usuario
                         if (auth.TipoUsuario == "Administrador")
