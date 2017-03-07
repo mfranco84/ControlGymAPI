@@ -16,8 +16,13 @@ namespace ControlGymAPI.Controllers
         List<GimnasioModel> listaGimnasios;
         GimnasioRepository GimnasioRep = new GimnasioRepository();
 
-        // GET api/gimnasio
+        public HttpResponseMessage Options()
+        {
+            // return null; // HTTP 200 response with empty body
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
+        // GET api/gimnasio
         public List<GimnasioModel> GetGimmasios()
         {
             return GimnasioRep.RetrieveGimnasios();

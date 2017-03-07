@@ -9,6 +9,8 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
@@ -17,7 +19,13 @@ namespace ControlGymAPI.Controllers
         // Atributos
         List<HorarioClaseModel> listaHorarioClase;
         HorarioClaseRepository repository = new HorarioClaseRepository();
-        
+
+        public HttpResponseMessage Options()
+        {
+            // return null; // HTTP 200 response with empty body
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
         /**
          * GET: api/HorarioClase/
         **/
