@@ -7,6 +7,8 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
@@ -15,14 +17,23 @@ namespace ControlGymAPI.Controllers
         // Atributos
         List<MiembroModel> listaMiembros;
         MiembroRepository miembroRep = new MiembroRepository();
+        AuthRepository auth = new AuthRepository();
 
         /**
          * GET: api/Miembro/
         **/
-        public List<MiembroModel> GetMiembros()
+        public HttpResponseMessage GetMiembros()
         {
-            listaMiembros = miembroRep.RetrieveMiembros();
-            return listaMiembros;
+            if (auth.ValidateToken(Request))
+            {
+                listaMiembros = miembroRep.RetrieveMiembros();
+                return Request.CreateResponse(HttpStatusCode.OK, listaMiembros, Configuration.Formatters.JsonFormatter);
+                // return listaMiembros;
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Miembro/{id}

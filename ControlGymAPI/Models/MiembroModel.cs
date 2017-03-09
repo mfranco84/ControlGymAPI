@@ -21,5 +21,7 @@ namespace ControlGymAPI.Models
         public string Telefono;
         public string CedulaIdentidad;
         public string Direccion;
+        // Atributo usado unicamente cuando se hace el login
+        public string Token;
     }
 }

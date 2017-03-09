@@ -13,6 +13,7 @@ namespace ControlGymAPI.Repositories
     public class LoginMiembroRepository
     {
         string connectionString = WebConfigurationManager.AppSettings["ConnectionString"];
+        AuthRepository authRepo = new AuthRepository();
 
         /**
          * LoginMiembro: Realiza Login de Usuarios         
@@ -55,6 +56,7 @@ namespace ControlGymAPI.Repositories
                     miembro.Direccion = SqlReader["Direccion"].ToString();
                 }
                 miembro.Clave = string.Empty;
+                miembro.Token = authRepo.RegistrarToken(miembro.IdMiembro, "Miembro");
                 return miembro;
             }
             catch (Exception exception)

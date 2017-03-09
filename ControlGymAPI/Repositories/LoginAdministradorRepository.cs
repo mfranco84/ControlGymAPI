@@ -17,6 +17,7 @@ namespace ControlGymAPI.Repositories
     public class LoginAdministradorRepository
     {
         string connectionString = WebConfigurationManager.AppSettings["ConnectionString"];
+        AuthRepository authRepo = new AuthRepository();
 
         /**
          * LoginAdministrador: Realiza Login de Usuarios         
@@ -59,6 +60,7 @@ namespace ControlGymAPI.Repositories
                     Administrador.Direccion = SqlReader["Direccion"].ToString();
                 }
                 Administrador.Clave = string.Empty;
+                Administrador.Token = authRepo.RegistrarToken(Administrador.IdAdministrador, "Administrador");
                 return Administrador;
             }
             catch (Exception exception)

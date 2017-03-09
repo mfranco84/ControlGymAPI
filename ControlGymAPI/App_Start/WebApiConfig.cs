@@ -31,11 +31,11 @@ namespace ControlGymAPI
             //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
             
             // Con esto nos aseguramos que la respuesta sea siempre en formato JSON
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new RequestHeaderMapping("Accept",
-                              "text/html",
-                              StringComparison.InvariantCultureIgnoreCase,
-                              true,
-                              "application/json"));
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new RequestHeaderMapping("Accept",
+            //                  "text/html",
+            //                  StringComparison.InvariantCultureIgnoreCase,
+            //                  true,
+            //                  "application/json"));
         }
     }
 }
