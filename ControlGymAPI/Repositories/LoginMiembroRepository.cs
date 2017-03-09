@@ -56,7 +56,7 @@ namespace ControlGymAPI.Repositories
                     miembro.Direccion = SqlReader["Direccion"].ToString();
                 }
                 miembro.Clave = string.Empty;
-                miembro.Token = authRepo.RegistrarToken(miembro.IdMiembro, "Miembro");
+                miembro.Token = authRepo.RegistrarToken(miembro.IdMiembro,miembro.IdGimnasio, "Miembro");
                 return miembro;
             }
             catch (Exception exception)

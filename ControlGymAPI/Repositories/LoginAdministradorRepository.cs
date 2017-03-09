@@ -60,7 +60,7 @@ namespace ControlGymAPI.Repositories
                     Administrador.Direccion = SqlReader["Direccion"].ToString();
                 }
                 Administrador.Clave = string.Empty;
-                Administrador.Token = authRepo.RegistrarToken(Administrador.IdAdministrador, "Administrador");
+                Administrador.Token = authRepo.RegistrarToken(Administrador.IdAdministrador,Administrador.IdGimnasio, "Administrador");
                 return Administrador;
             }
             catch (Exception exception)

@@ -19,8 +19,9 @@ namespace ControlGymAPI.Repositories
         public List<MiembroModel> RetrieveMiembro(int id)
         {
             miembroId = id;
-            return RetrieveMiembros();
+            return RetrieveMiembrosById(miembroId);
         }
+
         /**
          * RetrieveMiembros: Regresa la lista de miembros
          * TODO: Modificar para  regresar solamente miembros pertenecientes a un gimnasio.
@@ -35,12 +36,10 @@ namespace ControlGymAPI.Repositories
             {
                 command.CommandText = "usp_Miembro_Seleccionar";
                 command.CommandType = CommandType.StoredProcedure;
-                if (miembroId != 0)
-                {
-                    var parameter = new SqlParameter("@IdMiembro", SqlDbType.Int) { Value = miembroId };
-                    command.Parameters.Add(parameter);
-                    miembroId = 0;
-                }
+              
+                var parameter2 = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = GlobalAuth.IdGimnasio };
+                command.Parameters.Add(parameter2);
+
 
                 conexion.Open();
                 SqlDataReader SqlReader = command.ExecuteReader();
@@ -78,6 +77,59 @@ namespace ControlGymAPI.Repositories
             return listResult;
         }
 
+        public List<MiembroModel> RetrieveMiembrosById(int miembroId)
+        {
+            var listResult = new List<MiembroModel>();
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Miembro_Seleccionar";
+                command.CommandType = CommandType.StoredProcedure;
+
+                var parameter2 = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = GlobalAuth.IdGimnasio };
+                command.Parameters.Add(parameter2);
+
+                var parameter1 = new SqlParameter("@IdMiembro", SqlDbType.Int) { Value = miembroId};
+                command.Parameters.Add(parameter1);
+
+
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    var miembro = new MiembroModel();
+
+                    miembro.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
+                    miembro.UsuInclusion = SqlReader["UsuInclusion"].ToString();
+                    miembro.FechaInclusion = SqlReader.GetFieldValue<DateTime>(SqlReader.GetOrdinal("FechaInclusion"));
+                    miembro.UsuModificacion = SqlReader["UsuModificacion"].ToString();
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        miembro.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    miembro.Estado = Convert.ToInt16(SqlReader["Estado"]);
+                    miembro.IdGimnasio = Convert.ToInt16(SqlReader["IdGimnasio"]);
+                    miembro.Correo = SqlReader["Correo"].ToString();
+                    miembro.Nombre = SqlReader["Nombre"].ToString();
+                    miembro.Telefono = SqlReader["Telefono"].ToString();
+                    miembro.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
+                    miembro.Direccion = SqlReader["Direccion"].ToString();
+                    listResult.Add(miembro);
+                }
+            }
+            catch (Exception exception)
+            {
+                //Log4Net.WriteLog(exception, Log4Net.LogType.Error);
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return listResult;
+        }
         public MiembroModel InsertMiembro(MiembroModel miembro)
         {
             MiembroModel resultado = new MiembroModel();

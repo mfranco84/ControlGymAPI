@@ -38,10 +38,17 @@ namespace ControlGymAPI.Controllers
         /**
          * GET: api/Miembro/{id}
         **/
-        public MiembroModel GetMiembroById(int id)
+        public HttpResponseMessage GetMiembroById(int id)
         {
-            listaMiembros = miembroRep.RetrieveMiembro(id);
-            return listaMiembros.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaMiembros = miembroRep.RetrieveMiembro(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaMiembros.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         public MiembroModel Post(JObject jsonData)
