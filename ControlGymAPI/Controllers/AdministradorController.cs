@@ -43,25 +43,24 @@ namespace ControlGymAPI.Controllers
             return listaAdministrador.First();
         }
 
-        public AdministradorModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
-            AdministradorModel objeto = new AdministradorModel();
-            objeto.IdAdministrador = json.IdAdministrador;
-            objeto.UsuInclusion = json.UsuInclusion;
-            objeto.FechaInclusion = json.FechaInclusion;
-            objeto.UsuModificacion = json.UsuModificacion;
-            objeto.FechaModificacion = json.FechaModificacion;
-            objeto.Estado = json.Estado;
-            objeto.IdGimnasio = json.IdGimnasio;
-            objeto.Correo = json.Correo;
-            objeto.Clave = json.Clave;
-            objeto.Nombre = json.Nombre;
-            objeto.Telefono = json.Telefono;
-            objeto.CedulaJuridica = json.CedulaJuridica;
-            objeto.Direccion = json.Direccion;
+            AdministradorModel administrador = new AdministradorModel();
+            administrador.IdGimnasio = json.IdGimnasio;
+            administrador.Correo = json.Correo;
+            administrador.Clave = json.Clave;
+            administrador.Nombre = json.Nombre;
+            administrador.Telefono = json.Telefono;
+            administrador.CedulaJuridica = json.CedulaJuridica;
+            administrador.Direccion = json.Direccion;
 
-            return repository.InsertAdministrador(objeto);
+            administrador = repository.InsertAdministrador(administrador);
+            if (administrador.IdAdministrador == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, administrador, Configuration.Formatters.JsonFormatter);
         }
 
     }

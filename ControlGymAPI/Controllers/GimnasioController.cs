@@ -36,16 +36,21 @@ namespace ControlGymAPI.Controllers
         }
 
         // POST api/gimnasio
-        public GimnasioModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             // una variable de tipo dynamic nos permite acceder 
             // las propiedades de la variable como si fuese un Objeto
             dynamic json = jsonData;
-            GimnasioModel miembro = new GimnasioModel();
-            miembro.IdMembresia = json.IdMembresia;
-            miembro.Nombre = json.Nombre;
+            GimnasioModel gimnasio = new GimnasioModel();
+            gimnasio.IdMembresia = json.IdMembresia;
+            gimnasio.Nombre = json.Nombre;
 
-            return GimnasioRep.InsertGimnasio(miembro);
+            gimnasio = GimnasioRep.InsertGimnasio(gimnasio);
+            if (gimnasio.IdGimnasio == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, gimnasio, Configuration.Formatters.JsonFormatter);
         }
 
         // PUT api/gimnasio/5
