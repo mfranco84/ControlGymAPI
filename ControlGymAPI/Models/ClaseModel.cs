@@ -14,6 +14,7 @@ namespace ControlGymAPI.Models
         public String UsuModificacion;
         public DateTime FechaModificacion;
         public Int32 Estado;
+        public Int64 IdGimnasio;
         public String Nombre;
     }
 }

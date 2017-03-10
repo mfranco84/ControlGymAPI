@@ -1,5 +1,5 @@
 //Creado por: Generado Automaticamente
-//Fecha de Creacion: 26/02/2017 09:53:22 a.m.
+//Fecha de Creacion: 09/03/2017 04:23:06 p.m.
 //Comentario: Generacion API
 
 using System;
@@ -70,6 +70,10 @@ namespace ControlGymAPI.Repositories
                     {
                         item.Estado = Convert.ToInt32(SqlReader["Estado"]);
                     }
+                    if (SqlReader["IdGimnasio"] != DBNull.Value)
+                    {
+                        item.IdGimnasio = Convert.ToInt64(SqlReader["IdGimnasio"]);
+                    }
                     if (SqlReader["Nombre"] != DBNull.Value)
                     {
                         item.Nombre = Convert.ToString(SqlReader["Nombre"]);
@@ -97,8 +101,10 @@ namespace ControlGymAPI.Repositories
             {
                 command.CommandText = "usp_Clase_Insertar";
                 command.CommandType = CommandType.StoredProcedure;
-                var parameter1 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = Clase.Nombre };
+                var parameter1 = new SqlParameter("@IdGimnasio", SqlDbType.BigInt) { Value = Clase.IdGimnasio };
                 command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = Clase.Nombre };
+                command.Parameters.Add(parameter2);
                 conexion.Open();
                 SqlDataReader SqlReader = command.ExecuteReader();
 
@@ -127,6 +133,10 @@ namespace ControlGymAPI.Repositories
                     if (SqlReader["Estado"] != DBNull.Value)
                     {
                         Clase.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdGimnasio"] != DBNull.Value)
+                    {
+                        Clase.IdGimnasio = Convert.ToInt64(SqlReader["IdGimnasio"]);
                     }
                     if (SqlReader["Nombre"] != DBNull.Value)
                     {
