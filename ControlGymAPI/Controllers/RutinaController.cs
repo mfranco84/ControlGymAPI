@@ -37,6 +37,22 @@ namespace ControlGymAPI.Controllers
             }
         }
         /**
+         * GET: api/programa/{{programaId}}/rutinas
+        **/
+        public HttpResponseMessage GetRutinaByPrograma(int programaId)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                listaRutina = repository.RetrieveRutinaByProgramaId(programaId);
+                return Request.CreateResponse(HttpStatusCode.OK, listaRutina, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+        }
+
+        /**
          * GET: api/Rutina/{id}
         **/
         public HttpResponseMessage GetRutinaById(int id)

@@ -17,6 +17,18 @@ namespace ControlGymAPI
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            /*Ruta para traer los programas y rutinas de un miembro*/
+            config.Routes.MapHttpRoute(
+                name: "MiembroPrograma",
+                routeTemplate: "api/miembro/{miembroId}/programas",
+                defaults: new { controller = "ProgramaEjercicio", action = "GetProgramaEjercicioByMiembro"}
+            );
+            config.Routes.MapHttpRoute(
+                name: "ProgramaRutinas",
+                routeTemplate: "api/programa/{programaId}/rutinas",
+                defaults: new { controller = "Rutina", action = "GetRutinaByPrograma" }
+            );
+
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
             // For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.

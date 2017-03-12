@@ -37,20 +37,21 @@ namespace ControlGymAPI.Controllers
             }
         }
         /**
-         * GET: api/ProgramaEjercicio/{id}
+         * GET: api/miembro/{miembroId}/programas
         **/
-        public HttpResponseMessage GetProgramaEjercicioById(int id)
+        public HttpResponseMessage GetProgramaEjercicioByMiembro(int miembroId)
         {
             if (auth.ValidateToken(Request))
             {
-                listaProgramaEjercicio = repository.RetrieveProgramaEjercicio(id);
-                return Request.CreateResponse(HttpStatusCode.OK, listaProgramaEjercicio.First(), Configuration.Formatters.JsonFormatter);
+                listaProgramaEjercicio = repository.RetrieveProgramaEjercicioByMiembroId(miembroId);
+                return Request.CreateResponse(HttpStatusCode.OK, listaProgramaEjercicio, Configuration.Formatters.JsonFormatter);
             }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.Forbidden);
             }
         }
+        
 
         public HttpResponseMessage Post(JObject jsonData)
         {

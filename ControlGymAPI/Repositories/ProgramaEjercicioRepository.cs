@@ -100,6 +100,80 @@ namespace ControlGymAPI.Repositories
             return listResult;
         }
 
+        public List<ProgramaEjercicioModel> RetrieveProgramaEjercicioByMiembroId(int idMiembro)
+        {
+            var listResult = new List<ProgramaEjercicioModel>();
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_ProgramaEjercicioMiembro_Seleccionar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdMiembro", SqlDbType.Int) { Value = idMiembro };
+                command.Parameters.Add(parameter);
+                IdProgramaEjercicio = 0;
+
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    var item = new ProgramaEjercicioModel();
+                    if (SqlReader["IdProgramaEjercicio"] != DBNull.Value)
+                    {
+                        item.IdProgramaEjercicio = Convert.ToInt64(SqlReader["IdProgramaEjercicio"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        item.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        item.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        item.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        item.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        item.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["NombrePrograma"] != DBNull.Value)
+                    {
+                        item.NombrePrograma = Convert.ToString(SqlReader["NombrePrograma"]);
+                    }
+                    if (SqlReader["IdMiembro"] != DBNull.Value)
+                    {
+                        item.IdMiembro = Convert.ToInt64(SqlReader["IdMiembro"]);
+                    }
+                    if (SqlReader["FechaInicio"] != DBNull.Value)
+                    {
+                        item.FechaInicio = Convert.ToDateTime(SqlReader["FechaInicio"]);
+                    }
+                    if (SqlReader["FechaFin"] != DBNull.Value)
+                    {
+                        item.FechaFin = Convert.ToDateTime(SqlReader["FechaFin"]);
+                    }
+                    listResult.Add(item);
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return listResult;
+        }
+
         public ProgramaEjercicioModel InsertProgramaEjercicio(ProgramaEjercicioModel ProgramaEjercicio)
         {
             var myConnection = new ConnectionManager(connectionString);
