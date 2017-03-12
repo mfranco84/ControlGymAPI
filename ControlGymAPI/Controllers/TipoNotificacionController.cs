@@ -9,41 +9,63 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class TipoNotificacionController : ApiController
+    public class TipoNotificacionController : ApiDefaultController
     {
         // Atributos
         List<TipoNotificacionModel> listaTipoNotificacion;
         TipoNotificacionRepository repository = new TipoNotificacionRepository();
-        
+        AuthRepository auth = new AuthRepository();
+
         /**
          * GET: api/TipoNotificacion/
         **/
-        public List<TipoNotificacionModel> GetTipoNotificacion()
+        public HttpResponseMessage GetTipoNotificacion()
         {
-            listaTipoNotificacion = repository.RetrieveTipoNotificacion();
-            return listaTipoNotificacion;
+            if (auth.ValidateToken(Request))
+            {
+                listaTipoNotificacion = repository.RetrieveTipoNotificacion();                
+                return Request.CreateResponse(HttpStatusCode.OK, listaTipoNotificacion, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/TipoNotificacion/{id}
         **/
-        public TipoNotificacionModel GetTipoNotificacionById(int id)
+        public HttpResponseMessage GetTipoNotificacionById(int id)
         {
-            listaTipoNotificacion = repository.RetrieveTipoNotificacion(id);
-            return listaTipoNotificacion.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaTipoNotificacion = repository.RetrieveTipoNotificacion(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaTipoNotificacion.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public TipoNotificacionModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             TipoNotificacionModel objeto = new TipoNotificacionModel();
-			objeto.Intervalo = json.Intervalo;
-			objeto.Mensaje = json.Mensaje;
-			objeto.Nombre = json.Nombre;
+            objeto.Intervalo = json.Intervalo;
+            objeto.Mensaje = json.Mensaje;
+            objeto.Nombre = json.Nombre;
 
-            return repository.InsertTipoNotificacion(objeto);
+            objeto = repository.InsertTipoNotificacion(objeto);
+            if (objeto.IdTipoNotificacion == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

@@ -9,43 +9,65 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class ExcepcionController : ApiController
+    public class ExcepcionController : ApiDefaultController
     {
         // Atributos
         List<ExcepcionModel> listaExcepcion;
         ExcepcionRepository repository = new ExcepcionRepository();
+        AuthRepository auth = new AuthRepository();
         
         /**
          * GET: api/Excepcion/
         **/
-        public List<ExcepcionModel> GetExcepcion()
+        public HttpResponseMessage GetExcepcion()
         {
-            listaExcepcion = repository.RetrieveExcepcion();
-            return listaExcepcion;
+            if (auth.ValidateToken(Request))
+            {
+                listaExcepcion = repository.RetrieveExcepcion();
+                return Request.CreateResponse(HttpStatusCode.OK, listaExcepcion, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Excepcion/{id}
         **/
-        public ExcepcionModel GetExcepcionById(int id)
+        public HttpResponseMessage GetExcepcionById(int id)
         {
-            listaExcepcion = repository.RetrieveExcepcion(id);
-            return listaExcepcion.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaExcepcion = repository.RetrieveExcepcion(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaExcepcion.First(), Configuration.Formatters.JsonFormatter);                
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public ExcepcionModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             ExcepcionModel objeto = new ExcepcionModel();
-			objeto.Linea_Error = json.Linea_Error;
-			objeto.Mensaje_Error = json.Mensaje_Error;
-			objeto.Numero_Error = json.Numero_Error;
-			objeto.Parametros_Error = json.Parametros_Error;
-			objeto.Procedimiento_Error = json.Procedimiento_Error;
+            objeto.Linea_Error = json.Linea_Error;
+            objeto.Mensaje_Error = json.Mensaje_Error;
+            objeto.Numero_Error = json.Numero_Error;
+            objeto.Parametros_Error = json.Parametros_Error;
+            objeto.Procedimiento_Error = json.Procedimiento_Error;
 
-            return repository.InsertExcepcion(objeto);
+            objeto = repository.InsertExcepcion(objeto);
+            if (objeto.IdExcepcion == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

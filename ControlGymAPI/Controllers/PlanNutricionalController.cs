@@ -9,42 +9,64 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class PlanNutricionalController : ApiController
+    public class PlanNutricionalController : ApiDefaultController
     {
         // Atributos
         List<PlanNutricionalModel> listaPlanNutricional;
         PlanNutricionalRepository repository = new PlanNutricionalRepository();
-        
+        AuthRepository auth = new AuthRepository();
+
         /**
          * GET: api/PlanNutricional/
         **/
-        public List<PlanNutricionalModel> GetPlanNutricional()
+        public HttpResponseMessage GetPlanNutricional()
         {
-            listaPlanNutricional = repository.RetrievePlanNutricional();
-            return listaPlanNutricional;
+            if (auth.ValidateToken(Request))
+            {
+                listaPlanNutricional = repository.RetrievePlanNutricional();                
+                return Request.CreateResponse(HttpStatusCode.OK, listaPlanNutricional, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/PlanNutricional/{id}
         **/
-        public PlanNutricionalModel GetPlanNutricionalById(int id)
+        public HttpResponseMessage GetPlanNutricionalById(int id)
         {
-            listaPlanNutricional = repository.RetrievePlanNutricional(id);
-            return listaPlanNutricional.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaPlanNutricional = repository.RetrievePlanNutricional(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaPlanNutricional.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public PlanNutricionalModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             PlanNutricionalModel objeto = new PlanNutricionalModel();
-			objeto.FechaFin = json.FechaFin;
-			objeto.FechaInicio = json.FechaInicio;
-			objeto.IdMiembro = json.IdMiembro;
-			objeto.Nombre = json.Nombre;
+            objeto.FechaFin = json.FechaFin;
+            objeto.FechaInicio = json.FechaInicio;
+            objeto.IdMiembro = json.IdMiembro;
+            objeto.Nombre = json.Nombre;
 
-            return repository.InsertPlanNutricional(objeto);
+            objeto = repository.InsertPlanNutricional(objeto);
+            if (objeto.IdPlanNutricional == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

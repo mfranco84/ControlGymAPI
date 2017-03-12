@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace ControlGymAPI.Controllers
 {
-    public class LoginMiembroController : ApiController
+    public class LoginMiembroController : ApiDefaultController
     {
         LoginMiembroRepository loginMiembroRespuesta = new LoginMiembroRepository();
 

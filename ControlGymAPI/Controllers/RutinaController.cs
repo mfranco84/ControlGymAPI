@@ -14,44 +14,58 @@ using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class RutinaController : ApiController
+    public class RutinaController : ApiDefaultController
     {
         // Atributos
         List<RutinaModel> listaRutina;
         RutinaRepository repository = new RutinaRepository();
-
-        public HttpResponseMessage Options()
-        {
-            // return null; // HTTP 200 response with empty body
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        AuthRepository auth = new AuthRepository();
 
         /**
          * GET: api/Rutina/
         **/
-        public List<RutinaModel> GetRutina()
+        public HttpResponseMessage GetRutina()
         {
-            listaRutina = repository.RetrieveRutina();
-            return listaRutina;
+            if (auth.ValidateToken(Request))
+            {
+                listaRutina = repository.RetrieveRutina();
+                return Request.CreateResponse(HttpStatusCode.OK, listaRutina, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Rutina/{id}
         **/
-        public RutinaModel GetRutinaById(int id)
+        public HttpResponseMessage GetRutinaById(int id)
         {
-            listaRutina = repository.RetrieveRutina(id);
-            return listaRutina.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaRutina = repository.RetrieveRutina(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaRutina.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public RutinaModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             RutinaModel objeto = new RutinaModel();
-			objeto.DetalleRutina = json.DetalleRutina;
-			objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
-			objeto.NombreRutina = json.NombreRutina;
+            objeto.DetalleRutina = json.DetalleRutina;
+            objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
+            objeto.NombreRutina = json.NombreRutina;
 
-            return repository.InsertRutina(objeto);
+            objeto = repository.InsertRutina(objeto);
+            if (objeto.IdProgramaEjercicio == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

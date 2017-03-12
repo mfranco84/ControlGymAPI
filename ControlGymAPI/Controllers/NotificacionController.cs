@@ -9,40 +9,63 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Net.Http;
 
 namespace ControlGymAPI.Controllers
 {
-    public class NotificacionController : ApiController
+    public class NotificacionController : ApiDefaultController
     {
         // Atributos
         List<NotificacionModel> listaNotificacion;
         NotificacionRepository repository = new NotificacionRepository();
-        
+        AuthRepository auth = new AuthRepository();
+
         /**
          * GET: api/Notificacion/
         **/
-        public List<NotificacionModel> GetNotificacion()
+        public HttpResponseMessage GetNotificacion()
         {
-            listaNotificacion = repository.RetrieveNotificacion();
-            return listaNotificacion;
+            if (auth.ValidateToken(Request))
+            {
+                listaNotificacion = repository.RetrieveNotificacion();
+                return Request.CreateResponse(HttpStatusCode.OK, listaNotificacion, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
+
         /**
          * GET: api/Notificacion/{id}
         **/
-        public NotificacionModel GetNotificacionById(int id)
+        public HttpResponseMessage GetNotificacionById(int id)
         {
-            listaNotificacion = repository.RetrieveNotificacion(id);
-            return listaNotificacion.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaNotificacion = repository.RetrieveNotificacion();
+                return Request.CreateResponse(HttpStatusCode.OK, listaNotificacion.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public NotificacionModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             NotificacionModel objeto = new NotificacionModel();
-			objeto.IdMiembro = json.IdMiembro;
-			objeto.IdTipoNotificacion = json.IdTipoNotificacion;
+            objeto.IdMiembro = json.IdMiembro;
+            objeto.IdTipoNotificacion = json.IdTipoNotificacion;
 
-            return repository.InsertNotificacion(objeto);
+            objeto = repository.InsertNotificacion(objeto);
+            if (objeto.IdMiembro == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

@@ -163,12 +163,12 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdministradorController.cs" />
     <Compile Include="Controllers\AdministradorPermisoController.cs" />
+    <Compile Include="Controllers\ApiDefaultController.cs" />
     <Compile Include="Controllers\ClaseController.cs" />
     <Compile Include="Controllers\EstadoController.cs" />
     <Compile Include="Controllers\ExcepcionController.cs" />
     <Compile Include="Controllers\FacturacionController.cs" />
     <Compile Include="Controllers\GimnasioController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorarioClaseController.cs" />
     <Compile Include="Controllers\LoginAdministradorController.cs" />
     <Compile Include="Controllers\LoginMiembroController.cs" />

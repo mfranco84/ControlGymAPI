@@ -20,12 +20,6 @@ namespace ControlGymAPI.Controllers
         List<HorarioClaseModel> listaHorarioClase;
         HorarioClaseRepository repository = new HorarioClaseRepository();
 
-        public HttpResponseMessage Options()
-        {
-            // return null; // HTTP 200 response with empty body
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
         /**
          * GET: api/HorarioClase/
         **/

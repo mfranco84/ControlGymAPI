@@ -9,15 +9,18 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class AdministradorPermisoController : ApiController
+    public class AdministradorPermisoController : ApiDefaultController
     {
         // Atributos
         List<AdministradorPermisoModel> listaAdministradorPermiso;
         AdministradorPermisoRepository repository = new AdministradorPermisoRepository();
-        
+        AuthRepository auth = new AuthRepository();        
+
         /**
          * GET: api/AdministradorPermiso/
         **/

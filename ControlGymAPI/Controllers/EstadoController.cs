@@ -9,40 +9,62 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class EstadoController : ApiController
+    public class EstadoController : ApiDefaultController
     {
         // Atributos
         List<EstadoModel> listaEstado;
         EstadoRepository repository = new EstadoRepository();
-        
+        AuthRepository auth = new AuthRepository();        
+
         /**
          * GET: api/Estado/
         **/
-        public List<EstadoModel> GetEstado()
+        public HttpResponseMessage GetEstado()
         {
-            listaEstado = repository.RetrieveEstado();
-            return listaEstado;
+            if (auth.ValidateToken(Request))
+            {
+                listaEstado = repository.RetrieveEstado();
+                return Request.CreateResponse(HttpStatusCode.OK, listaEstado, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Estado/{id}
         **/
-        public EstadoModel GetEstadoById(int id)
+        public HttpResponseMessage GetEstadoById(int id)
         {
-            listaEstado = repository.RetrieveEstado(id);
-            return listaEstado.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaEstado = repository.RetrieveEstado(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaEstado.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public EstadoModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             EstadoModel objeto = new EstadoModel();
-			objeto.Descripcion = json.Descripcion;
-			objeto.IdEstado = json.IdEstado;
+            objeto.Descripcion = json.Descripcion;
+            objeto.IdEstado = json.IdEstado;
 
-            return repository.InsertEstado(objeto);
+            objeto = repository.InsertEstado(objeto);
+            if (objeto.IdEstado == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

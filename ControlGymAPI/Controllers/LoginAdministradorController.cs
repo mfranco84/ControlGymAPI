@@ -10,15 +10,9 @@ using System.Web.Http;
 
 namespace ControlGymAPI.Controllers
 {
-    public class LoginAdministradorController : ApiController
+    public class LoginAdministradorController : ApiDefaultController
     {
         LoginAdministradorRepository loginAdministradorRespuesta = new LoginAdministradorRepository();
-
-        public HttpResponseMessage Options()
-        {
-            // return null; // HTTP 200 response with empty body
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
 
         // POST api/loginAdministrador
         public AdministradorModel Post(JObject jsonData)

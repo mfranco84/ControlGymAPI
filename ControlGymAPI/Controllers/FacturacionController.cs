@@ -9,41 +9,63 @@ using System.Web.Http;
 using ControlGymAPI.Models;
 using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class FacturacionController : ApiController
+    public class FacturacionController : ApiDefaultController
     {
         // Atributos
         List<FacturacionModel> listaFacturacion;
         FacturacionRepository repository = new FacturacionRepository();
-        
+        AuthRepository auth = new AuthRepository();
+
         /**
          * GET: api/Facturacion/
         **/
-        public List<FacturacionModel> GetFacturacion()
+        public HttpResponseMessage GetFacturacion()
         {
-            listaFacturacion = repository.RetrieveFacturacion();
-            return listaFacturacion;
+            if (auth.ValidateToken(Request))
+            {
+                listaFacturacion = repository.RetrieveFacturacion();
+                return Request.CreateResponse(HttpStatusCode.OK, listaFacturacion, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Facturacion/{id}
         **/
-        public FacturacionModel GetFacturacionById(int id)
+        public HttpResponseMessage GetFacturacionById(int id)
         {
-            listaFacturacion = repository.RetrieveFacturacion(id);
-            return listaFacturacion.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaFacturacion = repository.RetrieveFacturacion(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaFacturacion.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
-        public FacturacionModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
             dynamic json = jsonData;
             FacturacionModel objeto = new FacturacionModel();
-			objeto.FechaPago = json.FechaPago;
-			objeto.IdGimnasio = json.IdGimnasio;
-			objeto.Monto = json.Monto;
+            objeto.FechaPago = json.FechaPago;
+            objeto.IdGimnasio = json.IdGimnasio;
+            objeto.Monto = json.Monto;
 
-            return repository.InsertFacturacion(objeto);
+            objeto = repository.InsertFacturacion(objeto);
+            if (objeto.IdFacturacion == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
     }

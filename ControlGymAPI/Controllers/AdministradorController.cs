@@ -14,37 +14,47 @@ using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class AdministradorController : ApiController
+    public class AdministradorController : ApiDefaultController
     {
         // Atributos
         List<AdministradorModel> listaAdministrador;
         AdministradorRepository repository = new AdministradorRepository();
-
-        public HttpResponseMessage Options()
-        {
-            // return null; // HTTP 200 response with empty body
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
+        AuthRepository auth = new AuthRepository();
+        
         /**
          * GET: api/Administrador/
         **/
-        public List<AdministradorModel> GetAdministrador()
+        public HttpResponseMessage GetAdministrador()
         {
-            listaAdministrador = repository.RetrieveAdministrador();
-            return listaAdministrador;
+            if (auth.ValidateToken(Request))
+            {
+                listaAdministrador = repository.RetrieveAdministrador();
+                return Request.CreateResponse(HttpStatusCode.OK, listaAdministrador, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
         /**
          * GET: api/Administrador/{id}
         **/
-        public AdministradorModel GetAdministradorById(int id)
+        public HttpResponseMessage GetAdministradorById(int id)
         {
-            listaAdministrador = repository.RetrieveAdministrador(id);
-            return listaAdministrador.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaAdministrador = repository.RetrieveAdministrador(id);                
+                return Request.CreateResponse(HttpStatusCode.OK, listaAdministrador.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         public HttpResponseMessage Post(JObject jsonData)
         {
+
             dynamic json = jsonData;
             AdministradorModel administrador = new AdministradorModel();
             administrador.IdGimnasio = json.IdGimnasio;

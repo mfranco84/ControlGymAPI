@@ -10,29 +10,38 @@ using System.Web.Http;
 
 namespace ControlGymAPI.Controllers
 {
-    public class GimnasioController : ApiController
+    public class GimnasioController : ApiDefaultController
     {
         // Atributos
         List<GimnasioModel> listaGimnasios;
         GimnasioRepository GimnasioRep = new GimnasioRepository();
-
-        public HttpResponseMessage Options()
-        {
-            // return null; // HTTP 200 response with empty body
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        AuthRepository auth = new AuthRepository();        
 
         // GET api/gimnasio
-        public List<GimnasioModel> GetGimmasios()
+        public HttpResponseMessage GetGimmasios()
         {
-            return GimnasioRep.RetrieveGimnasios();
+            if (auth.ValidateToken(Request))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, GimnasioRep.RetrieveGimnasios(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         // GET api/gimnasio/5
-        public GimnasioModel GetGimnasioById(int id)
+        public HttpResponseMessage GetGimnasioById(int id)
         {
-            listaGimnasios = GimnasioRep.RetrieveGimnasio(id);
-            return listaGimnasios.First();
+            if (auth.ValidateToken(Request))
+            {
+                listaGimnasios = GimnasioRep.RetrieveGimnasio(id);
+                return Request.CreateResponse(HttpStatusCode.OK, listaGimnasios.First(), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         // POST api/gimnasio
