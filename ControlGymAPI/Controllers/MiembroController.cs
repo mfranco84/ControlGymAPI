@@ -6,6 +6,7 @@ using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net;
+using System;
 
 namespace ControlGymAPI.Controllers
 {
@@ -49,21 +50,57 @@ namespace ControlGymAPI.Controllers
 
         public HttpResponseMessage Post(JObject jsonData)
         {
-            // una variable de tipo dynamic nos permite acceder 
-            // las propiedades de la variable como si fuese un Objeto
-            dynamic json = jsonData;
-            MiembroModel miembro = new MiembroModel();
-            miembro.IdGimnasio = json.IdGimnasio;
-            miembro.Correo = json.Correo;
-            miembro.Nombre = json.Nombre;
-            miembro.Telefono = json.Telefono;
-            miembro.CedulaIdentidad = json.CedulaIdentidad;
-            miembro.Direccion = json.Direccion;
-            if (miembro.IdMiembro == 0)
+            if (auth.ValidateToken(Request))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                // una variable de tipo dynamic nos permite acceder 
+                // las propiedades de la variable como si fuese un Objeto
+                dynamic json = jsonData;
+                MiembroModel miembro = new MiembroModel();
+                miembro.IdGimnasio = json.IdGimnasio;
+                miembro.Correo = json.Correo;
+                miembro.Nombre = json.Nombre;
+                miembro.Telefono = json.Telefono;
+                miembro.CedulaIdentidad = json.CedulaIdentidad;
+                miembro.Direccion = json.Direccion;
+                if (miembro.IdGimnasio == 0 || String.IsNullOrEmpty(miembro.Nombre))
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                miembro = miembroRep.InsertMiembro(miembro);
+                return Request.CreateResponse(HttpStatusCode.Created, miembro, Configuration.Formatters.JsonFormatter);
             }
-            return Request.CreateResponse(HttpStatusCode.Created, miembro, Configuration.Formatters.JsonFormatter);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+        }
+
+        public HttpResponseMessage Put(JObject jsonData)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                // una variable de tipo dynamic nos permite acceder 
+                // las propiedades de la variable como si fuese un Objeto
+                dynamic json = jsonData;
+                MiembroModel miembro = new MiembroModel();
+                miembro.IdMiembro = json.IdMiembro;
+                miembro.IdGimnasio = json.IdGimnasio;
+                miembro.Correo = json.Correo;
+                miembro.Nombre = json.Nombre;
+                miembro.Telefono = json.Telefono;
+                miembro.CedulaIdentidad = json.CedulaIdentidad;
+                miembro.Direccion = json.Direccion;
+                if (miembro.IdMiembro == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                miembro = miembroRep.UpdateMiembro(miembro);
+                return Request.CreateResponse(HttpStatusCode.OK, miembro, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
     }

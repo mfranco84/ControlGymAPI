@@ -197,5 +197,73 @@ namespace ControlGymAPI.Repositories
             }
             return resultado;
         }
+
+        public MiembroModel UpdateMiembro(MiembroModel miembro)
+        {
+            MiembroModel resultado = new MiembroModel();
+            var myConnection = new ConnectionManager(connectionString);
+            var conexion = myConnection.CreateConnection();
+            var command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Miembro_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+
+                var parameter = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = miembro.IdGimnasio };
+                command.Parameters.Add(parameter);
+
+                var parameter2 = new SqlParameter("@Correo", SqlDbType.VarChar) { Value = miembro.Correo };
+                command.Parameters.Add(parameter2);
+
+                var parameter3 = new SqlParameter("@IdMiembro", SqlDbType.VarChar) { Value = miembro.IdMiembro };
+                command.Parameters.Add(parameter3);
+
+                var parameter4 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = miembro.Nombre };
+                command.Parameters.Add(parameter4);
+
+                var parameter5 = new SqlParameter("@Telefono", SqlDbType.VarChar) { Value = miembro.Telefono };
+                command.Parameters.Add(parameter5);
+
+                var parameter6 = new SqlParameter("@CedulaIdentidad", SqlDbType.VarChar) { Value = miembro.CedulaIdentidad };
+                command.Parameters.Add(parameter6);
+
+                var parameter7 = new SqlParameter("@Direccion", SqlDbType.VarChar) { Value = miembro.Direccion };
+                command.Parameters.Add(parameter7);
+
+                conexion.Open();
+                //command.ExecuteNonQuery();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    resultado = new MiembroModel();
+
+                    resultado.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
+                    resultado.UsuInclusion = SqlReader["UsuInclusion"].ToString();
+                    resultado.FechaInclusion = SqlReader.GetFieldValue<DateTime>(SqlReader.GetOrdinal("FechaInclusion"));
+                    resultado.UsuModificacion = SqlReader["UsuModificacion"].ToString();
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        resultado.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    resultado.Estado = Convert.ToInt16(SqlReader["Estado"]);
+                    resultado.IdGimnasio = Convert.ToInt16(SqlReader["IdGimnasio"]);
+                    resultado.Correo = SqlReader["Correo"].ToString();
+                    resultado.Nombre = SqlReader["Nombre"].ToString();
+                    resultado.Telefono = SqlReader["Telefono"].ToString();
+                    resultado.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
+                    resultado.Direccion = SqlReader["Direccion"].ToString();
+                }
+            }
+            catch (Exception exception)
+            {
+                //Log4Net.WriteLog(exception, Log4Net.LogType.Error);
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return resultado;
+        }
     }
 }
