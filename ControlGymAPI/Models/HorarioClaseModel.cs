@@ -16,7 +16,7 @@ namespace ControlGymAPI.Models
         public Int32 Estado;
         public Int64 IdClase;
         public String Dia;
-        public DateTime HoraInicio;
-        public DateTime HoraFin;
+        public TimeSpan HoraInicio;
+        public TimeSpan HoraFin;
     }
 }

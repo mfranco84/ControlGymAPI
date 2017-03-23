@@ -80,11 +80,84 @@ namespace ControlGymAPI.Repositories
                     }
                     if (SqlReader["HoraInicio"] != DBNull.Value)
                     {
-                        item.HoraInicio = Convert.ToDateTime(SqlReader["HoraInicio"]);
+                        item.HoraInicio = TimeSpan.Parse(Convert.ToString(SqlReader["HoraInicio"]));
                     }
                     if (SqlReader["HoraFin"] != DBNull.Value)
                     {
-                        item.HoraFin = Convert.ToDateTime(SqlReader["HoraFin"]);
+                        item.HoraFin = TimeSpan.Parse(Convert.ToString(SqlReader["HoraFin"]));
+                    }
+                    listResult.Add(item);
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return listResult;
+        }
+
+        public List<HorarioClaseModel> RetrieveHorarioByClaseId(int claseId)
+        {
+            var listResult = new List<HorarioClaseModel>();
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_HorarioClaseClase_Seleccionar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdClase", SqlDbType.Int) { Value = claseId };
+                command.Parameters.Add(parameter);
+
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    var item = new HorarioClaseModel();
+                    if (SqlReader["IdHorarioClase"] != DBNull.Value)
+                    {
+                        item.IdHorarioClase = Convert.ToInt64(SqlReader["IdHorarioClase"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        item.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        item.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        item.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        item.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        item.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdClase"] != DBNull.Value)
+                    {
+                        item.IdClase = Convert.ToInt64(SqlReader["IdClase"]);
+                    }
+                    if (SqlReader["Dia"] != DBNull.Value)
+                    {
+                        item.Dia = Convert.ToString(SqlReader["Dia"]);
+                    }
+                    if (SqlReader["HoraInicio"] != DBNull.Value)
+                    {
+                        item.HoraInicio = TimeSpan.Parse(Convert.ToString(SqlReader["HoraInicio"]));
+                    }
+                    if (SqlReader["HoraFin"] != DBNull.Value)
+                    {
+                        item.HoraFin = TimeSpan.Parse(Convert.ToString(SqlReader["HoraFin"]));
                     }
                     listResult.Add(item);
                 }
@@ -156,11 +229,11 @@ namespace ControlGymAPI.Repositories
                     }
                     if (SqlReader["HoraInicio"] != DBNull.Value)
                     {
-                        HorarioClase.HoraInicio = Convert.ToDateTime(SqlReader["HoraInicio"]);
+                        HorarioClase.HoraInicio = TimeSpan.Parse(Convert.ToString(SqlReader["HoraInicio"]));
                     }
                     if (SqlReader["HoraFin"] != DBNull.Value)
                     {
-                        HorarioClase.HoraFin = Convert.ToDateTime(SqlReader["HoraFin"]);
+                        HorarioClase.HoraFin = TimeSpan.Parse(Convert.ToString(SqlReader["HoraFin"]));
                     }
                 }
             }

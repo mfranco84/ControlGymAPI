@@ -19,6 +19,7 @@ namespace ControlGymAPI.Controllers
         // Atributos
         List<HorarioClaseModel> listaHorarioClase;
         HorarioClaseRepository repository = new HorarioClaseRepository();
+        AuthRepository auth = new AuthRepository();
 
         /**
          * GET: api/HorarioClase/
@@ -35,6 +36,22 @@ namespace ControlGymAPI.Controllers
         {
             listaHorarioClase = repository.RetrieveHorarioClase(id);
             return listaHorarioClase.First();
+        }
+
+        /**
+         * GET: api/miembro/{miembroId}/programas
+        **/
+        public HttpResponseMessage GetHorarioByClase(int claseId)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                listaHorarioClase = repository.RetrieveHorarioByClaseId(claseId);
+                return Request.CreateResponse(HttpStatusCode.OK, listaHorarioClase, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         public HorarioClaseModel Post(JObject jsonData)
