@@ -9,6 +9,8 @@ namespace ControlGymAPI.Controllers
 {
     public class ApiDefaultController : ApiController
     {
+
+        [AcceptVerbs("OPTIONS")]
         public HttpResponseMessage Options()
         {
             // return null; // HTTP 200 response with empty body

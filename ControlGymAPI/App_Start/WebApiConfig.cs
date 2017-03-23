@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Routing;
 
 namespace ControlGymAPI
 {
@@ -32,7 +33,9 @@ namespace ControlGymAPI
             config.Routes.MapHttpRoute(
                 name: "ClaseHorarios",
                 routeTemplate: "api/clase/{claseId}/horarios",
-                defaults: new { controller = "HorarioClase", action = "GetHorarioByClase" }
+                defaults: new { controller = "HorarioClase", action = "GetHorarioByClase" },
+                // Importantisimo para que el ACTION sea registrado como un metodo GET, ante el llamado OPTIONS
+                constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
             );
 
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.

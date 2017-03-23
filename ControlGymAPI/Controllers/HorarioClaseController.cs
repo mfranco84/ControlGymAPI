@@ -14,12 +14,13 @@ using System.Net;
 
 namespace ControlGymAPI.Controllers
 {
-    public class HorarioClaseController : ApiController
+    public class HorarioClaseController : ApiDefaultController
     {
         // Atributos
         List<HorarioClaseModel> listaHorarioClase;
         HorarioClaseRepository repository = new HorarioClaseRepository();
         AuthRepository auth = new AuthRepository();
+
 
         /**
          * GET: api/HorarioClase/
@@ -41,6 +42,9 @@ namespace ControlGymAPI.Controllers
         /**
          * GET: api/miembro/{miembroId}/programas
         **/
+        //[HttpGet]
+        //[ActionName("GetHorarioByClase")]
+        // [AcceptVerbs("GET", "OPTIONS")]
         public HttpResponseMessage GetHorarioByClase(int claseId)
         {
             if (auth.ValidateToken(Request))
