@@ -37,7 +37,7 @@ namespace ControlGymAPI.Controllers
             }
         }
         /**
-         * GET: api/miembro/{miembroId}/programas
+         * GET: api/miembro/{miembroId}/PlanNutrional
         **/
         public HttpResponseMessage GetProgramaEjercicioByMiembro(int miembroId)
         {
@@ -61,6 +61,7 @@ namespace ControlGymAPI.Controllers
             objeto.FechaInicio = json.FechaInicio;
             objeto.IdMiembro = json.IdMiembro;
             objeto.NombrePrograma = json.NombrePrograma;
+            /*esto es nuevo*///objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
 
             objeto = repository.InsertProgramaEjercicio(objeto);
             if (objeto.IdProgramaEjercicio == 0)

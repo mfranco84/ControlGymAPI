@@ -28,6 +28,18 @@ namespace ControlGymAPI
                 routeTemplate: "api/programa/{programaId}/rutinas",
                 defaults: new { controller = "Rutina", action = "GetRutinaByPrograma" }
             );
+            config.Routes.MapHttpRoute(
+                name: "PlanNutrional",
+                routeTemplate: "api/miembro/{miembroId}/PlanNutricional",
+                defaults: new { controller = "PlanNutricional", action = "GetPlanNutrionalByMiembro" }
+            );
+            config.Routes.MapHttpRoute(
+              name: "PlanNutricionalDetalle",
+              routeTemplate: "api/PlanNutricional/{plannutrionalId}/PlanNutricionalDetalle",
+              defaults: new { controller = "PlanNutricionalDetalle", action = "GetPlanNutrionalDetalleByPlanNutrional" }
+          );
+
+            
 
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
