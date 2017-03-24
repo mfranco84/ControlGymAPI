@@ -38,7 +38,7 @@ namespace ControlGymAPI.Controllers
         }
 
         /**
-         * GET: api/miembro/{miembroId}/programas
+         * GET: api/miembro/{miembroId}/PlanNutricional
         **/
         public HttpResponseMessage GetPlanNutrionalByMiembro(int miembroId)
         {
