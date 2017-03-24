@@ -61,7 +61,6 @@ namespace ControlGymAPI.Controllers
             objeto.FechaInicio = json.FechaInicio;
             objeto.IdMiembro = json.IdMiembro;
             objeto.NombrePrograma = json.NombrePrograma;
-
             objeto = repository.InsertProgramaEjercicio(objeto);
             if (objeto.IdProgramaEjercicio == 0)
             {

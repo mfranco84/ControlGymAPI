@@ -22,13 +22,16 @@ namespace ControlGymAPI
             config.Routes.MapHttpRoute(
                 name: "MiembroPrograma",
                 routeTemplate: "api/miembro/{miembroId}/programas",
-                defaults: new { controller = "ProgramaEjercicio", action = "GetProgramaEjercicioByMiembro"}
+                defaults: new { controller = "ProgramaEjercicio", action = "GetProgramaEjercicioByMiembro"},
+                constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
             );
             config.Routes.MapHttpRoute(
                 name: "ProgramaRutinas",
                 routeTemplate: "api/programa/{programaId}/rutinas",
-                defaults: new { controller = "Rutina", action = "GetRutinaByPrograma" }
+                defaults: new { controller = "Rutina", action = "GetRutinaByPrograma" },
+                constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
             );
+
             /*Ruta para traer los horarios de una clase*/
             config.Routes.MapHttpRoute(
                 name: "ClaseHorarios",
@@ -37,6 +40,21 @@ namespace ControlGymAPI
                 // Importantisimo para que el ACTION sea registrado como un metodo GET, ante el llamado OPTIONS
                 constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
             );
+
+            /*Ruta para traer el plan nutricional de un miembro*/
+            config.Routes.MapHttpRoute(
+                name: "PlanNutrional",
+                routeTemplate: "api/miembro/{miembroId}/PlanNutricional",
+                defaults: new { controller = "PlanNutricional", action = "GetPlanNutrionalByMiembro" },
+                constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
+            );
+            /*Ruta para traer el detalle de un plan nutricional*/
+            config.Routes.MapHttpRoute(
+              name: "PlanNutricionalDetalle",
+              routeTemplate: "api/PlanNutricional/{plannutrionalId}/PlanNutricionalDetalle",
+              defaults: new { controller = "PlanNutricionalDetalle", action = "GetPlanNutrionalDetalleByPlanNutrional" },
+              constraints: new { httpMethod = new HttpMethodConstraint(System.Net.Http.HttpMethod.Get) }
+          );
 
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.

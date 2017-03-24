@@ -37,6 +37,22 @@ namespace ControlGymAPI.Controllers
             }
         }
         /**
+     * GET: api/PlanNutricional/{{plannutrionalId}}/PlanNutricionalDetalle
+    **/
+        public HttpResponseMessage GetPlanNutrionalDetalleByPlanNutrional(int plannutrionalId)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                listaPlanNutricionalDetalle = repository.RetrievePlanNutrionalByPlanId(plannutrionalId);
+                return Request.CreateResponse(HttpStatusCode.OK, listaPlanNutricionalDetalle, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+        }
+
+        /**
          * GET: api/PlanNutricionalDetalle/{id}
         **/
         public HttpResponseMessage GetPlanNutricionalDetalleById(int id)
