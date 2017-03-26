@@ -26,30 +26,18 @@ namespace ControlGymAPI.Controllers
         **/
         public HttpResponseMessage GetMembresia()
         {
-            if (auth.ValidateToken(Request))
-            {
-                listaMembresia = repository.RetrieveMembresia();
-                return Request.CreateResponse(HttpStatusCode.OK, listaMembresia, Configuration.Formatters.JsonFormatter);                
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.Forbidden);
-            }
+            // Membresia no aplica ningun tipo de autenticación
+            listaMembresia = repository.RetrieveMembresia();
+            return Request.CreateResponse(HttpStatusCode.OK, listaMembresia, Configuration.Formatters.JsonFormatter);
         }
         /**
          * GET: api/Membresia/{id}
         **/
         public HttpResponseMessage GetMembresiaById(int id)
         {
-            if (auth.ValidateToken(Request))
-            {
-                listaMembresia = repository.RetrieveMembresia(id);            
-                return Request.CreateResponse(HttpStatusCode.OK, listaMembresia.First(), Configuration.Formatters.JsonFormatter);
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.Forbidden);
-            }
+            // Membresia no aplica ningun tipo de autenticación
+            listaMembresia = repository.RetrieveMembresia(id);
+            return Request.CreateResponse(HttpStatusCode.OK, listaMembresia.First(), Configuration.Formatters.JsonFormatter);
         }
 
         public HttpResponseMessage Post(JObject jsonData)

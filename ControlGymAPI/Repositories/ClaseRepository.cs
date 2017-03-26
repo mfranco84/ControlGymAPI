@@ -39,6 +39,8 @@ namespace ControlGymAPI.Repositories
                     command.Parameters.Add(parameter);
                     IdClase = 0;
                 }
+                var parameterIdGim = new SqlParameter("@IdGimnasio", SqlDbType.Int) { Value = GlobalAuth.IdGimnasio };
+                command.Parameters.Add(parameterIdGim);
 
                 conexion.Open();
                 SqlDataReader SqlReader = command.ExecuteReader();
