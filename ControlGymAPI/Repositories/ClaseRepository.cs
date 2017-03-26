@@ -157,5 +157,69 @@ namespace ControlGymAPI.Repositories
             return Clase;
         }
 
+        public ClaseModel UpdateClase(ClaseModel Clase)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Clase_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdClase", SqlDbType.BigInt) { Value = Clase.IdClase };
+                command.Parameters.Add(parameter);
+                var parameter1 = new SqlParameter("@IdGimnasio", SqlDbType.BigInt) { Value = Clase.IdGimnasio };
+                command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = Clase.Nombre };
+                command.Parameters.Add(parameter2);
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    if (SqlReader["IdClase"] != DBNull.Value)
+                    {
+                        Clase.IdClase = Convert.ToInt64(SqlReader["IdClase"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        Clase.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        Clase.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        Clase.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        Clase.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        Clase.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdGimnasio"] != DBNull.Value)
+                    {
+                        Clase.IdGimnasio = Convert.ToInt64(SqlReader["IdGimnasio"]);
+                    }
+                    if (SqlReader["Nombre"] != DBNull.Value)
+                    {
+                        Clase.Nombre = Convert.ToString(SqlReader["Nombre"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return Clase;
+        }
     }
 }

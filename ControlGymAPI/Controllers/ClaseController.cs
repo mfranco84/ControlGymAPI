@@ -68,5 +68,22 @@ namespace ControlGymAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
+        public HttpResponseMessage Put(JObject jsonData)
+        {
+            dynamic json = jsonData;
+            ClaseModel objeto = new ClaseModel();
+            objeto.IdClase = json.IdClase;
+            objeto.IdGimnasio = json.IdGimnasio;
+            objeto.Nombre = json.Nombre;
+
+            objeto = repository.UpdateClase(objeto);
+
+            if (objeto.IdClase == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+        }
+
     }
 }
