@@ -186,9 +186,91 @@ namespace ControlGymAPI.Repositories
                 command.Parameters.Add(parameter1);
                 var parameter2 = new SqlParameter("@Dia", SqlDbType.VarChar) { Value = HorarioClase.Dia };
                 command.Parameters.Add(parameter2);
-                var parameter3 = new SqlParameter("@HoraInicio", SqlDbType.DateTime) { Value = HorarioClase.HoraInicio };
+                string horaInicio = HorarioClase.HoraInicio.ToString(@"hh\:mm");
+                var parameter3 = new SqlParameter("@HoraInicio", SqlDbType.VarChar) { Value = horaInicio };
                 command.Parameters.Add(parameter3);
-                var parameter4 = new SqlParameter("@HoraFin", SqlDbType.DateTime) { Value = HorarioClase.HoraFin };
+                string horaFin = HorarioClase.HoraFin.ToString(@"hh\:mm");
+                var parameter4 = new SqlParameter("@HoraFin", SqlDbType.VarChar) { Value = horaFin };
+                command.Parameters.Add(parameter4);
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    if (SqlReader["IdHorarioClase"] != DBNull.Value)
+                    {
+                        HorarioClase.IdHorarioClase = Convert.ToInt64(SqlReader["IdHorarioClase"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        HorarioClase.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        HorarioClase.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        HorarioClase.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        HorarioClase.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        HorarioClase.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdClase"] != DBNull.Value)
+                    {
+                        HorarioClase.IdClase = Convert.ToInt64(SqlReader["IdClase"]);
+                    }
+                    if (SqlReader["Dia"] != DBNull.Value)
+                    {
+                        HorarioClase.Dia = Convert.ToString(SqlReader["Dia"]);
+                    }
+                    if (SqlReader["HoraInicio"] != DBNull.Value)
+                    {
+                        HorarioClase.HoraInicio = TimeSpan.Parse(Convert.ToString(SqlReader["HoraInicio"]));
+                    }
+                    if (SqlReader["HoraFin"] != DBNull.Value)
+                    {
+                        HorarioClase.HoraFin = TimeSpan.Parse(Convert.ToString(SqlReader["HoraFin"]));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return HorarioClase;
+        }
+
+
+        public HorarioClaseModel UpdateHorarioClase(HorarioClaseModel HorarioClase)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_HorarioClase_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdHorarioClase", SqlDbType.BigInt) { Value = HorarioClase.IdHorarioClase };
+                command.Parameters.Add(parameter);
+                var parameter1 = new SqlParameter("@IdClase", SqlDbType.BigInt) { Value = HorarioClase.IdClase };
+                command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@Dia", SqlDbType.VarChar) { Value = HorarioClase.Dia };
+                command.Parameters.Add(parameter2);
+                string horaInicio = HorarioClase.HoraInicio.ToString(@"hh\:mm");
+                var parameter3 = new SqlParameter("@HoraInicio", SqlDbType.VarChar) { Value = horaInicio };
+                command.Parameters.Add(parameter3);
+                string horaFin = HorarioClase.HoraFin.ToString(@"hh\:mm");
+                var parameter4 = new SqlParameter("@HoraFin", SqlDbType.VarChar) { Value = horaFin };
                 command.Parameters.Add(parameter4);
                 conexion.Open();
                 SqlDataReader SqlReader = command.ExecuteReader();

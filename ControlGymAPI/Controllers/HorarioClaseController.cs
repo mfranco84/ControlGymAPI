@@ -58,16 +58,43 @@ namespace ControlGymAPI.Controllers
             }
         }
 
-        public HorarioClaseModel Post(JObject jsonData)
+        public HttpResponseMessage Post(JObject jsonData)
         {
-            dynamic json = jsonData;
-            HorarioClaseModel objeto = new HorarioClaseModel();
-			objeto.Dia = json.Dia;
-			objeto.HoraFin = json.HoraFin;
-			objeto.HoraInicio = json.HoraInicio;
-			objeto.IdClase = json.IdClase;
+            if (auth.ValidateToken(Request))
+            {
 
-            return repository.InsertHorarioClase(objeto);
+                dynamic json = jsonData;
+                HorarioClaseModel objeto = new HorarioClaseModel();
+                objeto.IdClase = json.IdClase;
+                objeto.Dia = json.Dia;
+                objeto.HoraFin = json.HoraFin;
+                objeto.HoraInicio = json.HoraInicio;
+                return Request.CreateResponse(HttpStatusCode.OK, repository.InsertHorarioClase(objeto), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+
+        }
+
+        public HttpResponseMessage Put(JObject jsonData)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                dynamic json = jsonData;
+                HorarioClaseModel objeto = new HorarioClaseModel();
+                objeto.IdHorarioClase = json.IdHorarioClase;
+                objeto.IdClase = json.IdClase;
+                objeto.Dia = json.Dia;
+                objeto.HoraFin = json.HoraFin;
+                objeto.HoraInicio = json.HoraInicio;
+                return Request.CreateResponse(HttpStatusCode.OK, repository.UpdateHorarioClase(objeto), Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
     }
