@@ -265,5 +265,44 @@ namespace ControlGymAPI.Repositories
             }
             return resultado;
         }
+
+        public MiembroModel UpdateMiembroDeviceToken(MiembroModel miembro)
+        {
+            MiembroModel resultado = new MiembroModel();
+            var myConnection = new ConnectionManager(connectionString);
+            var conexion = myConnection.CreateConnection();
+            var command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Miembro_DeviceToken_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+
+                var parameter2 = new SqlParameter("@DeviceToken", SqlDbType.VarChar) { Value = miembro.DeviceToken };
+                command.Parameters.Add(parameter2);
+
+                var parameter3 = new SqlParameter("@IdMiembro", SqlDbType.VarChar) { Value = miembro.IdMiembro };
+                command.Parameters.Add(parameter3);
+
+                conexion.Open();
+                //command.ExecuteNonQuery();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    resultado = new MiembroModel();
+                    resultado.IdMiembro = Convert.ToInt16(SqlReader["IdMiembro"]);
+                    resultado.DeviceToken = SqlReader["DeviceToken"].ToString();
+                }
+            }
+            catch (Exception exception)
+            {
+                //Log4Net.WriteLog(exception, Log4Net.LogType.Error);
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return resultado;
+        }
     }
 }

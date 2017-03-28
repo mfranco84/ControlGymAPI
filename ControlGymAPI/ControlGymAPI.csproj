@@ -165,6 +165,7 @@
     <Compile Include="Controllers\AdministradorPermisoController.cs" />
     <Compile Include="Controllers\ApiDefaultController.cs" />
     <Compile Include="Controllers\ClaseController.cs" />
+    <Compile Include="Controllers\DeviceTokenController.cs" />
     <Compile Include="Controllers\EstadoController.cs" />
     <Compile Include="Controllers\ExcepcionController.cs" />
     <Compile Include="Controllers\FacturacionController.cs" />
