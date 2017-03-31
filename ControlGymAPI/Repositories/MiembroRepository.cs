@@ -63,6 +63,7 @@ namespace ControlGymAPI.Repositories
                     miembro.Telefono = SqlReader["Telefono"].ToString();
                     miembro.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
                     miembro.Direccion = SqlReader["Direccion"].ToString();
+                    miembro.DeviceToken = SqlReader["DeviceToken"].ToString();
                     listResult.Add(miembro);
                 }
             }
@@ -117,6 +118,7 @@ namespace ControlGymAPI.Repositories
                     miembro.Telefono = SqlReader["Telefono"].ToString();
                     miembro.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
                     miembro.Direccion = SqlReader["Direccion"].ToString();
+                    miembro.DeviceToken = SqlReader["DeviceToken"].ToString();
                     listResult.Add(miembro);
                 }
             }

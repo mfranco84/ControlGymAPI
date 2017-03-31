@@ -11,6 +11,7 @@ using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net;
+using ControlGymAPI.Services;
 
 namespace ControlGymAPI.Controllers
 {
@@ -82,6 +83,8 @@ namespace ControlGymAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            FirebaseNotification fbn = new FirebaseNotification();
+            fbn.postGeneral("Clase Actualizada", "Horarios actualizados para la clase " + objeto.Nombre);
             return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 

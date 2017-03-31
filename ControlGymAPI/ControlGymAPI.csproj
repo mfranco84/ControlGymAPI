@@ -228,6 +228,7 @@
     <Compile Include="Repositories\ProgramaEjercicioRepository.cs" />
     <Compile Include="Repositories\RutinaRepository.cs" />
     <Compile Include="Repositories\TipoNotificacionRepository.cs" />
+    <Compile Include="Services\FirebaseNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
