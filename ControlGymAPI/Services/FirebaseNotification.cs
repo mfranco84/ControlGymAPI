@@ -13,16 +13,22 @@ namespace ControlGymAPI.Services
 {
     public class FirebaseNotification
     {
-        private static readonly HttpClient client = new HttpClient();
+        private HttpClient client;
         private static String serverKey = "AAAAxdZ_rFE:APA91bHGpP4Kwf5z8lO8O2fcnCR-cEOCkoW8CXPKMpvMS50rGHprpat2GQiu0A1-nhd5dg83YgKYOFHhtjb0HeIflMuBQBZTAGc27HimJAq6bkvgW6mMVzT2MFgjp5xqcqgPX7rE1W5_";
         private static String url = "https://fcm.googleapis.com/fcm/send";
+
+        public FirebaseNotification()
+        {
+            // Agregando header customizado "Authorization: key=<serverKey>"
+            client = new HttpClient();
+            String authHeader = "key=" + serverKey;
+            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authHeader);
+        }
 
         // Envia notificacion a un miembro en especifico
         public void post(String deviceToken, String title, String body)
         {
-            // Agregando header customizado "Authorization: key=<serverKey>"
-            String authHeader = "key=" + serverKey;
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authHeader);
+            
 
             // Generando json para el body del POST
             dynamic myObject = new JObject();
