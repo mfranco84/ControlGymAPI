@@ -11,6 +11,8 @@ using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net;
+using ControlGymAPI.Services;
+using System;
 
 namespace ControlGymAPI.Controllers
 {
@@ -55,35 +57,63 @@ namespace ControlGymAPI.Controllers
 
         public HttpResponseMessage Post(JObject jsonData)
         {
-            dynamic json = jsonData;
-            ProgramaEjercicioModel objeto = new ProgramaEjercicioModel();
-            objeto.FechaFin = json.FechaFin;
-            objeto.FechaInicio = json.FechaInicio;
-            objeto.IdMiembro = json.IdMiembro;
-            objeto.NombrePrograma = json.NombrePrograma;
-            objeto = repository.InsertProgramaEjercicio(objeto);
-            if (objeto.IdProgramaEjercicio == 0)
+            if (auth.ValidateToken(Request))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                dynamic json = jsonData;
+                ProgramaEjercicioModel objeto = new ProgramaEjercicioModel();
+                objeto.FechaFin = json.FechaFin;
+                objeto.FechaInicio = json.FechaInicio;
+                objeto.IdMiembro = json.IdMiembro;
+                objeto.NombrePrograma = json.NombrePrograma;
+                objeto = repository.InsertProgramaEjercicio(objeto);
+                if (objeto.IdProgramaEjercicio == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                MiembroRepository miembroRep = new MiembroRepository();
+                MiembroModel miembro = miembroRep.RetrieveMiembrosById((int)objeto.IdMiembro).First();
+                FirebaseNotification fbn = new FirebaseNotification();
+                if (!string.IsNullOrEmpty(miembro.DeviceToken))
+                {
+                    fbn.post(miembro.DeviceToken, "Nuevo Programa", "Tienes un nuevo programa de ejercicio " + objeto.NombrePrograma);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
-            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
         public HttpResponseMessage Put(JObject jsonData)
         {
-            dynamic json = jsonData;
-            ProgramaEjercicioModel objeto = new ProgramaEjercicioModel();
-            objeto.FechaFin = json.FechaFin;
-            objeto.FechaInicio = json.FechaInicio;
-            objeto.IdMiembro = json.IdMiembro;
-            objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
-            objeto.NombrePrograma = json.NombrePrograma;
-            objeto = repository.UpdateProgramaEjercicio(objeto);
-            if (objeto.IdProgramaEjercicio == 0)
+            if (auth.ValidateToken(Request))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                dynamic json = jsonData;
+                ProgramaEjercicioModel objeto = new ProgramaEjercicioModel();
+                objeto.FechaFin = json.FechaFin;
+                objeto.FechaInicio = json.FechaInicio;
+                objeto.IdMiembro = json.IdMiembro;
+                objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
+                objeto.NombrePrograma = json.NombrePrograma;
+                objeto = repository.UpdateProgramaEjercicio(objeto);
+                if (objeto.IdProgramaEjercicio == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                MiembroRepository miembroRep = new MiembroRepository();
+                MiembroModel miembro = miembroRep.RetrieveMiembrosById((int) objeto.IdMiembro).First();
+                FirebaseNotification fbn = new FirebaseNotification();
+                if (!string.IsNullOrEmpty(miembro.DeviceToken))
+                {
+                    fbn.post(miembro.DeviceToken, "Programa actualizado", "Se ha actualizado tu programa de ejercicio " + objeto.NombrePrograma);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
-            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
     }
