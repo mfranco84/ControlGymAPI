@@ -11,6 +11,7 @@ using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net;
+using System;
 
 namespace ControlGymAPI.Controllers
 {
@@ -66,6 +67,28 @@ namespace ControlGymAPI.Controllers
             administrador.Direccion = json.Direccion;
 
             administrador = repository.InsertAdministrador(administrador);
+            //Enviar  correo de la cuenta creada
+            try
+            {
+                if (administrador.IdAdministrador> 0)
+                {
+                    List<Models.GimnasioModel> Gimnasio = new List<GimnasioModel>();
+                    Repositories.GimnasioRepository GimnasioRepository = new GimnasioRepository();
+                    Gimnasio = GimnasioRepository.RetrieveGimnasio(administrador.IdGimnasio);
+                    Notification.SendMail.SendNotificationByRegisterAdmin(administrador.Nombre, administrador.Correo, administrador.Clave, Gimnasio.FirstOrDefault().Nombre);
+                }
+            }
+            catch (Exception ex) { }
+            administrador.Clave = null;
+            if (administrador.IdAdministrador > 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.Created, administrador, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+
             if (administrador.IdAdministrador == 0)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
