@@ -235,5 +235,76 @@ namespace ControlGymAPI.Repositories
             return Rutina;
         }
 
+        public RutinaModel UpdateRutina(RutinaModel Rutina)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Rutina_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdRutina", SqlDbType.BigInt) { Value = Rutina.IdRutina };
+                command.Parameters.Add(parameter);
+                var parameter1 = new SqlParameter("@IdProgramaEjercicio", SqlDbType.BigInt) { Value = Rutina.IdProgramaEjercicio };
+                command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@NombreRutina", SqlDbType.VarChar) { Value = Rutina.NombreRutina };
+                command.Parameters.Add(parameter2);
+                var parameter3 = new SqlParameter("@DetalleRutina", SqlDbType.VarChar) { Value = Rutina.DetalleRutina };
+                command.Parameters.Add(parameter3);
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    if (SqlReader["IdRutina"] != DBNull.Value)
+                    {
+                        Rutina.IdRutina = Convert.ToInt64(SqlReader["IdRutina"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        Rutina.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        Rutina.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        Rutina.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        Rutina.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        Rutina.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdProgramaEjercicio"] != DBNull.Value)
+                    {
+                        Rutina.IdProgramaEjercicio = Convert.ToInt64(SqlReader["IdProgramaEjercicio"]);
+                    }
+                    if (SqlReader["NombreRutina"] != DBNull.Value)
+                    {
+                        Rutina.NombreRutina = Convert.ToString(SqlReader["NombreRutina"]);
+                    }
+                    if (SqlReader["DetalleRutina"] != DBNull.Value)
+                    {
+                        Rutina.DetalleRutina = Convert.ToString(SqlReader["DetalleRutina"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return Rutina;
+        }
+
     }
 }

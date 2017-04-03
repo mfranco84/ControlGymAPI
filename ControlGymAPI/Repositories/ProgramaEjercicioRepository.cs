@@ -249,5 +249,82 @@ namespace ControlGymAPI.Repositories
             return ProgramaEjercicio;
         }
 
+        public ProgramaEjercicioModel UpdateProgramaEjercicio(ProgramaEjercicioModel ProgramaEjercicio)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_ProgramaEjercicio_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdProgramaEjercicio", SqlDbType.BigInt) { Value = ProgramaEjercicio.IdProgramaEjercicio };
+                command.Parameters.Add(parameter);
+                var parameter1 = new SqlParameter("@NombrePrograma", SqlDbType.VarChar) { Value = ProgramaEjercicio.NombrePrograma };
+                command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@IdMiembro", SqlDbType.BigInt) { Value = ProgramaEjercicio.IdMiembro };
+                command.Parameters.Add(parameter2);
+                var parameter3 = new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = ProgramaEjercicio.FechaInicio };
+                command.Parameters.Add(parameter3);
+                var parameter4 = new SqlParameter("@FechaFin", SqlDbType.DateTime) { Value = ProgramaEjercicio.FechaFin };
+                command.Parameters.Add(parameter4);
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    if (SqlReader["IdProgramaEjercicio"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.IdProgramaEjercicio = Convert.ToInt64(SqlReader["IdProgramaEjercicio"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["NombrePrograma"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.NombrePrograma = Convert.ToString(SqlReader["NombrePrograma"]);
+                    }
+                    if (SqlReader["IdMiembro"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.IdMiembro = Convert.ToInt64(SqlReader["IdMiembro"]);
+                    }
+                    if (SqlReader["FechaInicio"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.FechaInicio = Convert.ToDateTime(SqlReader["FechaInicio"]);
+                    }
+                    if (SqlReader["FechaFin"] != DBNull.Value)
+                    {
+                        ProgramaEjercicio.FechaFin = Convert.ToDateTime(SqlReader["FechaFin"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return ProgramaEjercicio;
+        }
+
     }
 }

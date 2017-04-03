@@ -70,18 +70,50 @@ namespace ControlGymAPI.Controllers
 
         public HttpResponseMessage Post(JObject jsonData)
         {
-            dynamic json = jsonData;
-            RutinaModel objeto = new RutinaModel();
-            objeto.DetalleRutina = json.DetalleRutina;
-            objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
-            objeto.NombreRutina = json.NombreRutina;
-
-            objeto = repository.InsertRutina(objeto);
-            if (objeto.IdProgramaEjercicio == 0)
+            if (auth.ValidateToken(Request))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                dynamic json = jsonData;
+                RutinaModel objeto = new RutinaModel();
+                objeto.DetalleRutina = json.DetalleRutina;
+                objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
+                objeto.NombreRutina = json.NombreRutina;
+
+                objeto = repository.InsertRutina(objeto);
+                if (objeto.IdRutina == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
-            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+        }
+
+        public HttpResponseMessage Put(JObject jsonData)
+        {
+
+            if (auth.ValidateToken(Request))
+            {
+                dynamic json = jsonData;
+                RutinaModel objeto = new RutinaModel();
+                objeto.DetalleRutina = json.DetalleRutina;
+                objeto.IdProgramaEjercicio = json.IdProgramaEjercicio;
+                objeto.IdRutina = json.IdRutina;
+                objeto.NombreRutina = json.NombreRutina;
+
+                objeto = repository.UpdateRutina(objeto);
+                if (objeto.IdRutina == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
         }
 
     }

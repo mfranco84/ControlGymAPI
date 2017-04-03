@@ -66,6 +66,8 @@ namespace ControlGymAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
+            FirebaseNotification fbn = new FirebaseNotification();
+            fbn.postGeneral("Nueva Clase", "Asiste a la nueva clase " + objeto.Nombre);
             return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
         }
 
