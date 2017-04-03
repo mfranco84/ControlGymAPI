@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using ControlGymAPI.Models;
+using System.Web.Security;
 
 namespace ControlGymAPI.Repositories
 {
@@ -149,7 +150,8 @@ namespace ControlGymAPI.Repositories
                 var parameter2 = new SqlParameter("@Correo", SqlDbType.VarChar) { Value = miembro.Correo };
                 command.Parameters.Add(parameter2);
 
-                var parameter3 = new SqlParameter("@Clave", SqlDbType.VarChar) { Value = "clave" }; //Definir clave dinamicamente
+                miembro.Clave = Notification.Generate.CreateRandomPassword(6);
+                var parameter3 = new SqlParameter("@Clave", SqlDbType.VarChar) { Value = miembro.Clave}; //Definir clave dinamicamente
                 command.Parameters.Add(parameter3);
 
                 var parameter4 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = miembro.Nombre };
@@ -187,6 +189,7 @@ namespace ControlGymAPI.Repositories
                     resultado.Telefono = SqlReader["Telefono"].ToString();
                     resultado.CedulaIdentidad = SqlReader["CedulaIdentidad"].ToString();
                     resultado.Direccion = SqlReader["Direccion"].ToString();
+                    resultado.Clave = miembro.Clave;
                 }
             }
             catch (Exception exception)

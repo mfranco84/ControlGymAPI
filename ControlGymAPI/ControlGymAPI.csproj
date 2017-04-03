@@ -205,6 +205,7 @@
     <Compile Include="Models\ProgramaEjercicioModel.cs" />
     <Compile Include="Models\RutinaModel.cs" />
     <Compile Include="Models\TipoNotificacionModel.cs" />
+    <Compile Include="Notification\Generate.cs" />
     <Compile Include="Notification\Mail.cs" />
     <Compile Include="Notification\SendMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

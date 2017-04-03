@@ -67,7 +67,29 @@ namespace ControlGymAPI.Controllers
                     return Request.CreateResponse(HttpStatusCode.InternalServerError);
                 }
                 miembro = miembroRep.InsertMiembro(miembro);
-                return Request.CreateResponse(HttpStatusCode.Created, miembro, Configuration.Formatters.JsonFormatter);
+                //Enviar  correo de la cuenta creada
+                try
+                {
+                    if (miembro.IdMiembro>0)
+                    {
+                        List<Models.GimnasioModel> Gimnasio = new List<GimnasioModel>();
+                        Repositories.GimnasioRepository GimnasioRepository = new GimnasioRepository();
+                        Gimnasio = GimnasioRepository.RetrieveGimnasio(miembro.IdGimnasio);
+                        Notification.SendMail.SendNotificationByRegister(miembro.Nombre, miembro.Correo, miembro.Clave,Gimnasio.FirstOrDefault().Nombre);
+                    }
+                    
+                }
+                catch (Exception ex) { }
+                miembro.Clave = null;
+                if (miembro.IdMiembro > 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.Created, miembro, Configuration.Formatters.JsonFormatter);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Forbidden);
+                }
+                
             }
             else
             {

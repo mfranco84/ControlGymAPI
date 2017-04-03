@@ -22,7 +22,7 @@ namespace ControlGymAPI.Controllers
                 dynamic json = jsonData;
                 var Nombre = Convert.ToString(json.Nombre);
                 var Correo = Convert.ToString(json.Correo);
-                bool respuesta = SendMail.SendNotificationByRegister(Nombre, Correo, "");
+                bool respuesta = SendMail.SendNotificationByRegister(Nombre, Correo, "","GymControl");
                 return Request.CreateResponse(HttpStatusCode.OK, respuesta, Configuration.Formatters.JsonFormatter);
             }
             else
