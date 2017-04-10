@@ -70,19 +70,52 @@ namespace ControlGymAPI.Controllers
 
         public HttpResponseMessage Post(JObject jsonData)
         {
-            dynamic json = jsonData;
-            PlanNutricionalModel objeto = new PlanNutricionalModel();
-            objeto.FechaFin = json.FechaFin;
-            objeto.FechaInicio = json.FechaInicio;
-            objeto.IdMiembro = json.IdMiembro;
-            objeto.Nombre = json.Nombre;
-
-            objeto = repository.InsertPlanNutricional(objeto);
-            if (objeto.IdPlanNutricional == 0)
+            if (auth.ValidateToken(Request))
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                dynamic json = jsonData;
+                PlanNutricionalModel objeto = new PlanNutricionalModel();
+                objeto.FechaFin = json.FechaFin;
+                objeto.FechaInicio = json.FechaInicio;
+                objeto.IdMiembro = json.IdMiembro;
+                objeto.Nombre = json.Nombre;
+
+                objeto = repository.InsertPlanNutricional(objeto);
+                if (objeto.IdPlanNutricional == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
-            return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+            
+        }
+
+        public HttpResponseMessage Put(JObject jsonData)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                dynamic json = jsonData;
+                PlanNutricionalModel objeto = new PlanNutricionalModel();
+                objeto.FechaFin = json.FechaFin;
+                objeto.FechaInicio = json.FechaInicio;
+                objeto.IdMiembro = json.IdMiembro;
+                objeto.Nombre = json.Nombre;
+                objeto.IdPlanNutricional = json.IdPlanNutricional;
+                objeto = repository.UpdatePlanNutricional(objeto);
+                if (objeto.IdPlanNutricional == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+
         }
 
     }

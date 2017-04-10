@@ -251,5 +251,79 @@ namespace ControlGymAPI.Repositories
             return PlanNutricional;
         }
 
+        public PlanNutricionalModel UpdatePlanNutricional(PlanNutricionalModel PlanNutricional)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_PlanNutricional_Actualizar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter1 = new SqlParameter("@IdPlanNutricional", SqlDbType.BigInt) { Value = PlanNutricional.IdPlanNutricional };
+                command.Parameters.Add(parameter1);
+                var parameter2 = new SqlParameter("@Nombre", SqlDbType.VarChar) { Value = PlanNutricional.Nombre };
+                command.Parameters.Add(parameter2);
+                var parameter3 = new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = PlanNutricional.FechaInicio };
+                command.Parameters.Add(parameter3);
+                var parameter4 = new SqlParameter("@FechaFin", SqlDbType.DateTime) { Value = PlanNutricional.FechaFin };
+                command.Parameters.Add(parameter4);
+                conexion.Open();
+                SqlDataReader SqlReader = command.ExecuteReader();
+
+                while (SqlReader.Read())
+                {
+                    if (SqlReader["IdPlanNutricional"] != DBNull.Value)
+                    {
+                        PlanNutricional.IdPlanNutricional = Convert.ToInt64(SqlReader["IdPlanNutricional"]);
+                    }
+                    if (SqlReader["UsuInclusion"] != DBNull.Value)
+                    {
+                        PlanNutricional.UsuInclusion = Convert.ToString(SqlReader["UsuInclusion"]);
+                    }
+                    if (SqlReader["FechaInclusion"] != DBNull.Value)
+                    {
+                        PlanNutricional.FechaInclusion = Convert.ToDateTime(SqlReader["FechaInclusion"]);
+                    }
+                    if (SqlReader["UsuModificacion"] != DBNull.Value)
+                    {
+                        PlanNutricional.UsuModificacion = Convert.ToString(SqlReader["UsuModificacion"]);
+                    }
+                    if (SqlReader["FechaModificacion"] != DBNull.Value)
+                    {
+                        PlanNutricional.FechaModificacion = Convert.ToDateTime(SqlReader["FechaModificacion"]);
+                    }
+                    if (SqlReader["Estado"] != DBNull.Value)
+                    {
+                        PlanNutricional.Estado = Convert.ToInt32(SqlReader["Estado"]);
+                    }
+                    if (SqlReader["IdMiembro"] != DBNull.Value)
+                    {
+                        PlanNutricional.IdMiembro = Convert.ToInt64(SqlReader["IdMiembro"]);
+                    }
+                    if (SqlReader["Nombre"] != DBNull.Value)
+                    {
+                        PlanNutricional.Nombre = Convert.ToString(SqlReader["Nombre"]);
+                    }
+                    if (SqlReader["FechaInicio"] != DBNull.Value)
+                    {
+                        PlanNutricional.FechaInicio = Convert.ToDateTime(SqlReader["FechaInicio"]);
+                    }
+                    if (SqlReader["FechaFin"] != DBNull.Value)
+                    {
+                        PlanNutricional.FechaFin = Convert.ToDateTime(SqlReader["FechaFin"]);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            return PlanNutricional;
+        }
     }
 }
