@@ -11,6 +11,7 @@ using ControlGymAPI.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net;
+using ControlGymAPI.Services;
 
 namespace ControlGymAPI.Controllers
 {
@@ -84,6 +85,14 @@ namespace ControlGymAPI.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.InternalServerError);
                 }
+                MiembroRepository miembroRep = new MiembroRepository();
+                MiembroModel miembro = miembroRep.RetrieveMiembrosById((int)objeto.IdMiembro).First();
+                FirebaseNotification fbn = new FirebaseNotification();
+                if (!string.IsNullOrEmpty(miembro.DeviceToken))
+                {
+                    fbn.post(miembro.DeviceToken, "Nuevo Plan Nutricional", "Tienes un nuevo plan nutricional " + objeto.Nombre);
+                }
+
                 return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
             else
@@ -108,6 +117,14 @@ namespace ControlGymAPI.Controllers
                 if (objeto.IdPlanNutricional == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+
+                MiembroRepository miembroRep = new MiembroRepository();
+                MiembroModel miembro = miembroRep.RetrieveMiembrosById((int)objeto.IdMiembro).First();
+                FirebaseNotification fbn = new FirebaseNotification();
+                if (!string.IsNullOrEmpty(miembro.DeviceToken))
+                {
+                    fbn.post(miembro.DeviceToken, "Plan nutricional actualizado", "Se ha actualizado tu plan nutricional " + objeto.Nombre);
                 }
                 return Request.CreateResponse(HttpStatusCode.Created, objeto, Configuration.Formatters.JsonFormatter);
             }
