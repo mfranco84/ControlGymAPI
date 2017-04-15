@@ -330,5 +330,29 @@ namespace ControlGymAPI.Repositories
             return HorarioClase;
         }
 
+        public void DeleteHorario(int IdHorarioClase)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_HorarioClase_Eliminar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdHorarioClase", SqlDbType.BigInt) { Value = IdHorarioClase };
+                command.Parameters.Add(parameter);
+                conexion.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
+
     }
 }
