@@ -287,5 +287,29 @@ namespace ControlGymAPI.Repositories
             }
             return PlanNutricionalDetalle;
         }
+
+        public void DeletePlanNutricionalDetalle(int IdPlanNutricionalDetalle)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_PlanNutricionalDetalle_Eliminar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdPlanNutricionalDetalle", SqlDbType.BigInt) { Value = IdPlanNutricionalDetalle };
+                command.Parameters.Add(parameter);
+                conexion.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
     }
 }
