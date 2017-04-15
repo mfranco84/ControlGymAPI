@@ -116,5 +116,19 @@ namespace ControlGymAPI.Controllers
             }
         }
 
+        public HttpResponseMessage Delete(int id)
+        {
+            if (auth.ValidateToken(Request))
+            {
+                repository.DeleteRutina(id);
+                return Request.CreateResponse(HttpStatusCode.NoContent);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+
+        }
+
     }
 }

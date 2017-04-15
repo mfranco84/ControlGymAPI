@@ -306,5 +306,30 @@ namespace ControlGymAPI.Repositories
             return Rutina;
         }
 
+        public void DeleteRutina(int IdRutina)
+        {
+            var myConnection = new ConnectionManager(connectionString);
+            SqlConnection conexion = myConnection.CreateConnection();
+            SqlCommand command = myConnection.CreateCommand(conexion);
+            try
+            {
+                command.CommandText = "usp_Rutina_Eliminar";
+                command.CommandType = CommandType.StoredProcedure;
+                var parameter = new SqlParameter("@IdRutina", SqlDbType.BigInt) { Value = IdRutina };
+                command.Parameters.Add(parameter);
+                conexion.Open();
+                command.ExecuteNonQuery();
+
+            }
+            catch (Exception exception)
+            {
+                //Definir Log de Errores
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
+
     }
 }
